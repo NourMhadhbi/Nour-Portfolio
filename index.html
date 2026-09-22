@@ -1,0 +1,3666 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nour Mhadhbi — Ingénierie des données &amp; IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ============ TOKENS ============ */
+    :root {
+      --ink: #241621;
+      --ink-soft: #6B5563;
+      --bg: #FBF7F4;
+      --bg-alt: #F3EAE4;
+      --accent: #C9637A;
+      --accent-soft: #E9B7C2;
+      --accent-deep: #8E3F55;
+      --gold: #D9A441;
+      --card: #FFFFFF;
+      --line: #E7DAD3;
+      --shadow-sm: 0 2px 10px rgba(36, 22, 33, .05);
+      --shadow-md: 0 14px 40px -12px rgba(36, 22, 33, .18);
+      --shadow-lg: 0 30px 70px -20px rgba(36, 22, 33, .28);
+      --radius: 20px;
+      --ease: cubic-bezier(.22, 1, .36, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* ============ BARRE DE PROGRESSION ============ */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 9999;
+      transition: width .1s linear;
+    }
+
+    /* ============ CURSEUR LUMINEUX ============ */
+    .cursor-glow {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201, 99, 122, .10), transparent 65%);
+      pointer-events: none;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      transition: opacity .3s ease;
+      opacity: 0;
+    }
+
+    @media (hover: hover) {
+      .cursor-glow {
+        opacity: 1;
+      }
+    }
+
+    /* ============ NAVIGATION ============ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 18px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(14px);
+      background: rgba(251, 247, 244, .75);
+      border-bottom: 1px solid transparent;
+      transition: all .4s var(--ease);
+    }
+
+    nav.scrolled {
+      padding: 12px 40px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(251, 247, 244, .92);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-logo {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -.03em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(201, 99, 122, .5);
+      }
+
+      50% {
+        transform: scale(1.15);
+        box-shadow: 0 0 0 8px rgba(201, 99, 122, 0);
+      }
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      position: relative;
+      transition: color .3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width .35s var(--ease);
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      padding: 9px 20px;
+      border-radius: 100px;
+      background: var(--ink);
+      color: var(--bg) !important;
+      font-weight: 500;
+      transition: all .3s var(--ease);
+    }
+
+    .nav-cta::after {
+      display: none;
+    }
+
+    .nav-cta:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -6px rgba(201, 99, 122, .5);
+    }
+
+    /* ============ SWITCH LANGUE ============ */
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 100px;
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: all 0.3s var(--ease);
+      letter-spacing: 0.08em;
+    }
+
+    .lang-switch .lang-option {
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 100px;
+      color: var(--ink-soft);
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s var(--ease);
+      letter-spacing: inherit;
+    }
+
+    .lang-switch .lang-option:hover {
+      color: var(--accent);
+    }
+
+    .lang-switch .lang-option.active {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .lang-switch .lang-sep {
+      color: var(--line);
+      font-weight: 400;
+      user-select: none;
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 8px;
+    }
+
+    .burger span {
+      width: 24px;
+      height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: all .3s var(--ease);
+    }
+
+    /* ============ HERO ============ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(233, 183, 194, .35), transparent 65%);
+      animation: float 8s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -15%;
+      left: -8%;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217, 164, 65, .18), transparent 65%);
+      animation: float 10s ease-in-out infinite reverse;
+      z-index: 0;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(30px, -30px) scale(1.08);
+      }
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 100px;
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: slideUp .8s var(--ease) .1s forwards;
+    }
+
+    .hero-tag .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4CAF50;
+      animation: pulse-green 2s infinite;
+    }
+
+    @keyframes pulse-green {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, .6);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(76, 175, 80, 0);
+      }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5.5vw, 4.2rem);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: slideUp .8s var(--ease) .25s forwards;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero h1 em::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: var(--accent-soft);
+      border-radius: 4px;
+      z-index: -1;
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: underlineGrow 1s var(--ease) 1s forwards;
+    }
+
+    @keyframes underlineGrow {
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    .hero p.hero-lede {
+      font-size: 1.1rem;
+      color: var(--ink-soft);
+      max-width: 540px;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: slideUp .8s var(--ease) .4s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: slideUp .8s var(--ease) .55s forwards;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-weight: 500;
+      font-size: .95rem;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all .35s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, var(--accent), var(--accent-deep));
+      opacity: 0;
+      transition: opacity .35s ease;
+      z-index: 0;
+    }
+
+    .btn-primary:hover::before {
+      opacity: 1;
+    }
+
+    .btn-primary span,
+    .btn-primary svg {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px -10px rgba(201, 99, 122, .6);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--line);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      transition: transform .35s var(--ease);
+    }
+
+    .btn:hover svg {
+      transform: translateX(4px);
+    }
+
+    .hero-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--line);
+      position: relative;
+      opacity: 0;
+      animation: slideUp .9s var(--ease) .7s forwards;
+      transition: transform .5s var(--ease);
+    }
+
+    .hero-card:hover {
+      transform: translateY(-8px) rotate(-1deg);
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 32px;
+      right: 32px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      border-radius: 4px;
+    }
+
+    .hero-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      color: var(--ink);
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--bg-alt);
+      transition: all .35s var(--ease);
+    }
+
+    .stat:hover {
+      background: var(--accent-soft);
+      transform: translateY(-4px);
+    }
+
+    .stat-num {
+      font-family: 'Fraunces', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--accent-deep);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: .78rem;
+      color: var(--ink-soft);
+      margin-top: 6px;
+    }
+
+    .hero-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 6px 14px;
+      border-radius: 100px;
+      background: var(--bg-alt);
+      font-size: .78rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      border: 1px solid var(--line);
+      transition: all .3s var(--ease);
+      cursor: default;
+    }
+
+    .chip:hover {
+      background: var(--ink);
+      color: var(--bg);
+      transform: translateY(-2px);
+      border-color: var(--ink);
+    }
+
+    /* ============ SECTIONS ============ */
+    section {
+      padding: 100px 40px;
+      position: relative;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-head {
+      margin-bottom: 60px;
+      max-width: 700px;
+    }
+
+    #about .section-head h2 {
+      white-space: nowrap;
+      font-size: clamp(1.4rem, 2.2vw, 2.15rem);
+      line-height: 1.2;
+    }
+
+    @media (max-width: 968px) {
+      #about .section-head h2 {
+        white-space: normal;
+        font-size: clamp(1.4rem, 5vw, 2rem);
+      }
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .section-label::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 22px;
+      height: 1.5px;
+      background: var(--accent);
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      margin-bottom: 16px;
+    }
+
+    .section-head p {
+      color: var(--ink-soft);
+      font-size: 1.05rem;
+    }
+
+    /* ============ ANIMATIONS SCROLL ============ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .8s var(--ease), transform .8s var(--ease);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: .1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: .2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: .3s;
+    }
+
+    .reveal-delay-4 {
+      transition-delay: .4s;
+    }
+
+    /* ============ À PROPOS ============ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 44px;
+      align-items: start;
+    }
+
+    .about-photo-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--line);
+      position: relative;
+    }
+
+    .about-photo-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 20px;
+      right: 20px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      border-radius: 4px;
+      z-index: 1;
+    }
+
+    .about-photo-card img {
+      width: 100%;
+      height: 500%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    .about-text p {
+      color: var(--ink-soft);
+      font-size: 1rem;
+      margin-bottom: 16px;
+      max-width: 620px;
+    }
+
+    .about-text strong {
+      color: var(--ink);
+    }
+
+    .fact-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 28px;
+      max-width: 520px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .fact-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: .9rem;
+    }
+
+    .fact-row:last-child {
+      border-bottom: none;
+    }
+
+    .fact-label {
+      color: var(--ink-soft);
+    }
+
+    .fact-value {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    @media (max-width: 700px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-photo-card {
+        max-width: 260px;
+      }
+    }
+
+    /* ============ TIMELINE ============ */
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-soft), transparent);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 44px;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -40px;
+      top: 6px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 3px solid var(--accent);
+      transition: all .35s var(--ease);
+    }
+
+    .timeline-item:hover .timeline-dot {
+      background: var(--accent);
+      transform: scale(1.25);
+      box-shadow: 0 0 0 6px rgba(201, 99, 122, .15);
+    }
+
+    .timeline-date {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .timeline-item h3 {
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+    }
+
+    .timeline-company {
+      font-size: .95rem;
+      color: var(--ink-soft);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .timeline-item p {
+      color: var(--ink-soft);
+      font-size: .95rem;
+      max-width: 640px;
+    }
+
+    .timeline-list {
+      margin: 0 0 14px;
+      padding-left: 18px;
+      list-style: disc;
+      color: var(--ink-soft);
+      font-size: .93rem;
+      max-width: 640px;
+    }
+
+    .timeline-list li {
+      margin-bottom: 6px;
+    }
+
+    .timeline-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* ============ SKILLS / PROJETS ============ */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .skill-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: all .45s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .5s var(--ease);
+    }
+
+    .skill-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .skill-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent-soft);
+    }
+
+    .skill-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      transition: all .4s var(--ease);
+    }
+
+    .skill-card:hover .skill-icon {
+      background: var(--accent);
+      transform: rotate(-6deg) scale(1.1);
+    }
+
+    .skill-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .skill-card p {
+      color: var(--ink-soft);
+      font-size: .92rem;
+      margin-bottom: 18px;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-tag {
+      font-size: .75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--bg-alt);
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+
+    /* ============ PROJETS ============ */
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease), border-color 0.5s var(--ease);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(36, 22, 33, 0.04), 0 8px 24px -12px rgba(36, 22, 33, 0.08);
+    }
+
+    .project-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      right: -60px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+      opacity: 0;
+      transition: opacity .5s ease;
+    }
+
+    .project-card:hover::after {
+      opacity: .5;
+    }
+
+    .project-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 4px 12px rgba(36, 22, 33, 0.06), 0 24px 48px -16px rgba(36, 22, 33, 0.18);
+      border-color: var(--accent);
+    }
+
+    .project-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--bg-alt), #fff);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--accent-deep);
+      transition: all 0.45s var(--ease);
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 2px 8px rgba(36, 22, 33, 0.04);
+    }
+
+    .project-logo svg {
+      width: 26px;
+      height: 26px;
+      transition: transform 0.45s var(--ease);
+    }
+
+    .project-card:hover .project-logo {
+      background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+      color: white;
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -8px rgba(201, 99, 122, 0.5);
+    }
+
+    .project-card:hover .project-logo svg {
+      transform: scale(1.1) rotate(-4deg);
+    }
+
+    .project-num {
+      font-family: 'Fraunces', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      position: absolute;
+      top: 28px;
+      right: 76px;
+      z-index: 2;
+    }
+
+    .project-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+      padding-right: 46px;
+    }
+
+    .project-card p {
+      color: var(--ink-soft);
+      font-size: .95rem;
+      margin-bottom: 20px;
+      flex-grow: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .project-stack span {
+      font-size: .75rem;
+      padding: 5px 12px;
+      border-radius: 100px;
+      background: var(--bg-alt);
+      color: var(--ink-soft);
+      font-weight: 500;
+      border: 1px solid var(--line);
+      transition: all .3s ease;
+    }
+
+    .project-card:hover .project-stack span {
+      border-color: var(--accent-soft);
+    }
+
+    /* ============ DESCRIPTION REPLIABLE PROJET ============ */
+    .project-desc {
+      position: relative;
+      max-height: 6.5em;
+      overflow: hidden;
+      transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-bottom: 12px;
+      flex-grow: 1;
+      z-index: 1;
+    }
+
+    .project-desc p {
+      margin: 0 0 0.7em 0;
+      line-height: 1.6;
+      color: var(--ink-soft);
+      font-size: .95rem;
+    }
+
+    .project-desc p:last-child {
+      margin-bottom: 0;
+    }
+
+    .project-desc[data-collapsed="true"]::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3em;
+      background: linear-gradient(to bottom, transparent, var(--card) 90%);
+      pointer-events: none;
+    }
+
+    .project-desc[data-collapsed="false"] {
+      max-height: 3000px;
+    }
+
+    .toggle-desc {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 16px 0;
+      padding: 7px 16px;
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      border-radius: 999px;
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s var(--ease);
+      position: relative;
+      z-index: 2;
+      align-self: flex-start;
+      letter-spacing: 0.02em;
+    }
+
+    .toggle-desc:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -8px rgba(201, 99, 122, 0.6);
+    }
+
+    .toggle-desc .toggle-icon {
+      width: 13px;
+      height: 13px;
+      transition: transform 0.4s var(--ease);
+    }
+
+    .toggle-desc[aria-expanded="true"] .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    /* ============ GITHUB LINKS ============ */
+    .project-github {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 2;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      transition: all .3s var(--ease);
+    }
+
+    .project-github svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .project-github:hover {
+      background: var(--ink);
+      color: var(--bg);
+      transform: rotate(-8deg) scale(1.08);
+      border-color: var(--ink);
+    }
+
+    /* ============ PROJETS — DÉFILEMENT HORIZONTAL ============ */
+    .scroll-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .85rem;
+      color: var(--ink-soft);
+      margin: -28px 0 28px;
+    }
+
+    .scroll-hint svg {
+      width: 16px;
+      height: 16px;
+      animation: nudge 1.6s ease-in-out infinite;
+    }
+
+    @keyframes nudge {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(6px);
+      }
+    }
+
+    .projects-scroll {
+      display: flex;
+      gap: 28px;
+      overflow-x: auto;
+      padding: 8px 8px 24px 8px;
+      margin: 0 -8px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-soft) transparent;
+    }
+
+    .projects-scroll::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .projects-scroll::-webkit-scrollbar-track {
+      background: var(--bg-alt);
+      border-radius: 10px;
+    }
+
+    .projects-scroll::-webkit-scrollbar-thumb {
+      background: var(--accent-soft);
+      border-radius: 10px;
+    }
+
+    .projects-scroll::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    .projects-scroll .project-card {
+      flex: 0 0 460px;
+      scroll-snap-align: start;
+    }
+
+    @media (max-width: 640px) {
+      .projects-scroll .project-card {
+        flex-basis: 340px;
+      }
+    }
+
+    @media (max-width: 968px) and (min-width: 641px) {
+      .projects-scroll .project-card {
+        flex-basis: 400px;
+      }
+    }
+
+    /* ============ CONTACT ============ */
+    .contact-section {
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 40px;
+      margin: 0 40px 40px;
+      padding: 80px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-section::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201, 99, 122, .3), transparent 70%);
+      animation: float 9s ease-in-out infinite;
+    }
+
+    .contact-section::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      left: -60px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217, 164, 65, .2), transparent 70%);
+      animation: float 11s ease-in-out infinite reverse;
+    }
+
+    .contact-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .contact-inner .section-label {
+      color: var(--accent-soft);
+    }
+
+    .contact-inner .section-label::before {
+      background: var(--accent-soft);
+    }
+
+    .contact-inner h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 20px;
+      color: var(--bg);
+    }
+
+    .contact-inner p {
+      color: rgba(251, 247, 244, .7);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+
+    .contact-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .contact-actions .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .contact-actions .btn-primary:hover {
+      background: var(--accent-deep);
+      box-shadow: 0 14px 30px -10px rgba(201, 99, 122, .8);
+    }
+
+    .contact-actions .btn-ghost {
+      border-color: rgba(251, 247, 244, .25);
+      color: var(--bg);
+    }
+
+    .contact-actions .btn-ghost:hover {
+      border-color: var(--accent-soft);
+      color: var(--accent-soft);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 44px;
+    }
+
+    .social-link {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(251, 247, 244, .08);
+      border: 1px solid rgba(251, 247, 244, .15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .35s var(--ease);
+      color: var(--bg);
+    }
+
+    .social-link:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-4px) scale(1.1);
+      box-shadow: 0 10px 24px -8px rgba(201, 99, 122, .7);
+    }
+
+    .social-link svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ============ FOOTER ============ */
+    footer {
+      padding: 30px 40px;
+      text-align: center;
+      font-size: .85rem;
+      color: var(--ink-soft);
+      border-top: 1px solid var(--line);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============ MODAL PROJET ============ */
+    .project-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(36, 22, 33, 0);
+      backdrop-filter: blur(0px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .4s var(--ease), background .4s var(--ease), backdrop-filter .4s var(--ease);
+    }
+
+    .project-modal.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      background: rgba(36, 22, 33, 0.55);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-panel {
+      background: var(--card);
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      box-shadow: 0 40px 100px -30px rgba(36, 22, 33, 0.45);
+      max-width: 780px;
+      width: 100%;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transform: translateY(30px) scale(0.96);
+      opacity: 0;
+      transition: transform .5s var(--ease), opacity .4s var(--ease);
+    }
+
+    .project-modal.open .modal-panel {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .modal-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      z-index: 2;
+    }
+
+    .modal-header {
+      padding: 32px 36px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+
+    .modal-icon {
+      flex-shrink: 0;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px -8px rgba(201, 99, 122, 0.55);
+    }
+
+    .modal-icon svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .modal-title-wrap {
+      flex: 1;
+      min-width: 0;
+      padding-right: 44px;
+    }
+
+    .modal-num {
+      font-family: 'Fraunces', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .modal-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all .3s var(--ease);
+      z-index: 3;
+    }
+
+    .modal-close:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      transform: rotate(90deg);
+    }
+
+    .modal-close svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .modal-body {
+      padding: 24px 36px 28px;
+      overflow-y: auto;
+      flex: 1;
+      font-size: 0.96rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-soft) transparent;
+    }
+
+    .modal-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .modal-body::-webkit-scrollbar-track {
+      background: var(--bg-alt);
+      border-radius: 10px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+      background: var(--accent-soft);
+      border-radius: 10px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    .modal-body p {
+      margin: 0 0 1em 0;
+    }
+
+    .modal-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .modal-footer {
+      padding: 20px 36px 28px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      background: var(--bg);
+    }
+
+    .modal-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .modal-stack span {
+      font-size: .75rem;
+      padding: 5px 12px;
+      border-radius: 100px;
+      background: var(--bg-alt);
+      color: var(--ink-soft);
+      font-weight: 500;
+      border: 1px solid var(--line);
+    }
+
+    .modal-github {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 100px;
+      background: var(--ink);
+      color: var(--bg);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all .3s var(--ease);
+      flex-shrink: 0;
+    }
+
+    .modal-github svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .modal-github:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -8px rgba(201, 99, 122, 0.6);
+    }
+
+    .modal-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .project-modal {
+        padding: 12px;
+      }
+
+      .modal-panel {
+        max-height: 92vh;
+        border-radius: 22px;
+      }
+
+      .modal-header {
+        padding: 24px 20px 16px;
+      }
+
+      .modal-title {
+        font-size: 1.2rem;
+      }
+
+      .modal-icon {
+        width: 46px;
+        height: 46px;
+      }
+
+      .modal-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .modal-body {
+        padding: 18px 20px 22px;
+      }
+
+      .modal-footer {
+        padding: 16px 20px 22px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .modal-github {
+        justify-content: center;
+      }
+
+      .modal-links {
+        flex-direction: column;
+      }
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 968px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-card {
+        max-width: 500px;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 75%;
+        max-width: 320px;
+        background: var(--bg);
+        flex-direction: column;
+        justify-content: center;
+        gap: 24px;
+        box-shadow: var(--shadow-lg);
+        transition: right .4s var(--ease);
+        padding: 40px;
+        overflow-y: auto;
+      }
+
+      .nav-links.open {
+        right: 0;
+      }
+
+      .burger {
+        display: flex;
+      }
+
+      .burger.active span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+
+      .burger.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .burger.active span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+
+      .contact-section {
+        margin: 0 16px 16px;
+        padding: 60px 28px;
+        border-radius: 28px;
+      }
+
+      section {
+        padding: 70px 24px;
+      }
+
+      nav {
+        padding: 16px 20px;
+      }
+
+      nav.scrolled {
+        padding: 12px 20px;
+      }
+
+      .lang-switch {
+        padding: 7px 12px;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .hero {
+        padding: 100px 20px 60px;
+      }
+
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline {
+        padding-left: 32px;
+      }
+
+      .timeline-dot {
+        left: -32px;
+        width: 14px;
+        height: 14px;
+      }
+
+      .contact-actions {
+        flex-direction: column;
+      }
+
+      .contact-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        transition-duration: .001ms !important;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- NAVIGATION -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">Nour Mhadhbi</a>
+    <div class="nav-right">
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about" data-i18n="nav.about">À propos</a></li>
+        <li><a href="#education" data-i18n="nav.education">Parcours</a></li>
+        <li><a href="#experience" data-i18n="nav.experience">Expérience</a></li>
+        <li><a href="#projets" data-i18n="nav.projects">Projets</a></li>
+        <li><a href="#competences" data-i18n="nav.skills">Compétences</a></li>
+        <li><a href="#contact" class="nav-cta" data-i18n="nav.contact">Me contacter</a></li>
+      </ul>
+      <div class="lang-switch" id="langSwitch" role="group" aria-label="Language switch">
+        <button class="lang-option active" data-lang="fr">FR</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-option" data-lang="en">EN</button>
+      </div>
+      <button class="burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div>
+        <span class="hero-tag">
+          <span class="dot"></span>
+          <span data-i18n="hero.tag">Ouverte aux stages IA / Data</span>
+        </span>
+        <h1 data-i18n="hero.title">Étudiante ingénieure en <em>IA</em> &amp; Data Engineering</h1>
+        <p class="hero-lede" data-i18n="hero.lede">
+          Je conçois et développe des solutions en ingénierie des données et en intelligence artificielle, en
+          intervenant sur la conception de pipelines de données, le machine learning, le deep learning et le MLOps. Je
+          développe également des solutions d’IA générative, notamment des systèmes RAG, des chatbots intelligents et
+          des agents IA. Mon approche consiste à transformer les données et les modèles en solutions concrètes, fiables
+          et évolutives, adaptées aux besoins des applications et des utilisateurs.
+        </p>
+        <div class="hero-actions">
+          <a href="#projets" class="btn btn-primary">
+            <span data-i18n="hero.btn.projects">Voir mes projets</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a href="#contact" class="btn btn-ghost" data-i18n="hero.btn.contact">Me contacter</a>
+          <a href="https://github.com/NourMhadhbi" target="_blank" rel="noopener" class="btn btn-ghost">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+            <span>GitHub</span>
+          </a>
+          <a href="CV_Nour_Mhadhbi_FR.pdf" download class="btn btn-ghost">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 3v12" />
+              <path d="M7 10l5 5 5-5" />
+              <path d="M5 21h14" />
+            </svg>
+            <span data-i18n="hero.btn.cvfr">CV (FR)</span>
+          </a>
+          <a href="CV_Nour_Mhadhbi_EN.pdf" download class="btn btn-ghost">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 3v12" />
+              <path d="M7 10l5 5 5-5" />
+              <path d="M5 21h14" />
+            </svg>
+            <span data-i18n="hero.btn.cven">CV (EN)</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <h3 data-i18n="hero.card.title">En quelques chiffres</h3>
+        <div class="stat-grid">
+          <div class="stat">
+            <div class="stat-num">4</div>
+            <div class="stat-label" data-i18n="hero.stat.internships">Stages réalisés</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">7+</div>
+            <div class="stat-label" data-i18n="hero.stat.projects">Projets réalisés</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">3</div>
+            <div class="stat-label" data-i18n="hero.stat.languages">Langues parlées</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">10+</div>
+            <div class="stat-label" data-i18n="hero.stat.tech">Technologies maîtrisées</div>
+          </div>
+        </div>
+        <div class="hero-skills">
+          <span class="chip">Python</span>
+          <span class="chip">Spark</span>
+          <span class="chip">Kafka</span>
+          <span class="chip">Django REST</span>
+          <span class="chip">DagsHub</span>
+          <span class="chip">MLflow</span>
+          <span class="chip">GitHub Actions</span>
+          <span class="chip">n8n</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- À PROPOS -->
+  <section id="about">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label" data-i18n="about.label">Profil</span>
+        <h2 data-i18n="about.title">Étudiante Ingénieure spécialisée en Data Engineering et Intelligence Artificielle
+        </h2>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-photo-card reveal">
+          <img src="nour-mhadhbi-pro.jpg" alt="Nour Mhadhbi" onerror="this.style.display='none'">
+        </div>
+        <div class="about-text reveal reveal-delay-1">
+          <p data-i18n="about.p1">Je suis étudiante en 3ᵉ année du cycle ingénieur en <strong>Ingénierie des Données et
+              Systèmes
+              Décisionnels</strong> à l'ENET'Com, Sfax. Diplômée en Informatique Appliquée à la Gestion de la FSEGS
+            de Sfax, je suis également titulaire d'un double diplôme de l'Université du Mans, en France.</p>
+          <p data-i18n="about.p2">Mon parcours se situe à l'intersection de la <strong>Data Engineering, de la Data
+              Science, du MLOps
+              et du développement full-stack</strong>. Je m'intéresse particulièrement à la conception de pipelines
+            de données, au traitement et à la valorisation de la donnée, ainsi qu'au développement des applications
+            qui rendent ces données réellement exploitables.</p>
+          <p data-i18n="about.p3">Ce qui me motive, c'est de transformer des données brutes en solutions concrètes et
+            fiables — en
+            combinant rigueur d'ingénierie, curiosité scientifique et sens du produit fini.</p>
+
+          <div class="fact-card">
+            <div class="fact-row"><span class="fact-label" data-i18n="about.fact.location">Basée à</span><span
+                class="fact-value" data-i18n="about.fact.location.value">Sfax, Tunisie</span>
+            </div>
+            <div class="fact-row"><span class="fact-label" data-i18n="about.fact.domain">Domaine</span><span
+                class="fact-value" data-i18n="about.fact.domain.value">IA &amp; Ingénierie
+                des données</span></div>
+            <div class="fact-row"><span class="fact-label" data-i18n="about.fact.languages">Langues</span><span
+                class="fact-value" data-i18n="about.fact.languages.value">Arabe · Français ·
+                Anglais</span></div>
+            <div class="fact-row"><span class="fact-label" data-i18n="about.fact.availability">Disponibilité</span><span
+                class="fact-value" data-i18n="about.fact.availability.value">Ouverte aux
+                stages</span></div>
+            <div class="fact-row"><span class="fact-label" data-i18n="about.fact.contact">Contact</span><span
+                class="fact-value">mhadhbinouur@gmail.com</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARCOURS ACADÉMIQUE -->
+  <section id="education" style="background: var(--bg-alt); border-radius: 40px; margin: 0 40px;">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label" data-i18n="education.label">Parcours</span>
+        <h2 data-i18n="education.title">Parcours académique</h2>
+        <p data-i18n="education.subtitle">Un cheminement cohérent entre ingénierie logicielle, données et science des
+          données.</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date" data-i18n="edu1.date">2024 — Présent</div>
+          <h3 data-i18n="edu1.title">Cycle ingénieur — Ingénierie des Données &amp; Systèmes Décisionnels (IDSD)</h3>
+          <div class="timeline-company">ENET'Com, Sfax</div>
+          <p data-i18n="edu1.desc">Programme spécialisé en ingénierie des données, algorithmes de machine learning et
+            systèmes d'aide à la
+            décision.</p>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-1">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date" data-i18n="edu2.date">2021 — 2024</div>
+          <h3 data-i18n="edu2.title">Licence en Informatique Appliquée à la Gestion</h3>
+          <div class="timeline-company" data-i18n="edu2.company">FSEGS, Sfax · Double diplôme, Université du Mans,
+            France</div>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-2">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date" data-i18n="edu3.date">2020 — 2021</div>
+          <h3 data-i18n="edu3.title">Baccalauréat, Sciences Expérimentales</h3>
+          <div class="timeline-company">Lycée 15 Novembre 1955, Sfax</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPÉRIENCE -->
+  <section id="experience">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label" data-i18n="experience.label">Expérience</span>
+        <h2 data-i18n="experience.title">Là où j'ai livré, en équipe et en autonomie</h2>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item reveal">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date" data-i18n="exp1.date">Juin 2026 · Sfax</div>
+          <h3 data-i18n="exp1.title">Stagiaire — Retail Intelligence Platform</h3>
+          <div class="timeline-company">Anavid</div>
+          <ul class="timeline-list" data-i18n="exp1.list">
+            <li>Développement d'une plateforme de Retail Intelligence dédiée au traitement et à l'analyse des données
+              clients et transactionnelles</li>
+            <li>Mise en œuvre de pipelines Batch et Streaming avec Apache Kafka et Apache Spark, intégrant le traitement
+              et le feature engineering des données pour l'entraînement de modèles de classification, régression et
+              clustering.</li>
+            <li>Automatisation et orchestration des workflows avec n8n.</li>
+            <li>Développement de dashboards Grafana pour le suivi des KPIs et intégration des visualisations à
+              l'interface de la plateforme.</li>
+            <li>Mise en œuvre de pratiques MLOps : suivi et versionnement des modèles et des données avec MLflow et
+              DagsHub, exposition via API FastAPI, et automatisation des workflows CI/CD avec GitHub Actions.</li>
+            <li>Développement d'une solution RAG/Chatbot pour l'exploitation intelligente des données.</li>
+          </ul>
+
+          <div class="timeline-tags">
+            <span class="skill-tag">Python</span><span class="skill-tag">Spark</span><span
+              class="skill-tag">Kafka</span>
+            <span class="skill-tag">PostgreSQL</span><span class="skill-tag">Grafana</span><span
+              class="skill-tag">n8n</span>
+            <span class="skill-tag">Scikit-learn</span><span class="skill-tag">MLflow</span><span
+              class="skill-tag">DagsHub</span>
+            <span class="skill-tag">GitHub Actions</span><span class="skill-tag">FastAPI</span><span
+              class="skill-tag">Ionic</span>
+            <span class="skill-tag">React</span>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-1">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date" data-i18n="exp2.date">Juillet 2025 · Sfax</div>
+          <h3 data-i18n="exp2.title">Stagiaire d'été — Plateforme DomiService</h3>
+          <div class="timeline-company">Azin</div>
+          <ul class="timeline-list" data-i18n="exp2.list">
+            <li>Conception et développement d'une plateforme web de mise en relation entre clients et prestataires de
+              services à domicile.</li>
+            <li>Modélisation de la base de données et développement de l'API avec Node.js / Express.js.</li>
+            <li>Développement de l'interface utilisateur avec React.js.</li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="skill-tag">MySQL</span><span class="skill-tag">Express.js</span>
+            <span class="skill-tag">React.js</span><span class="skill-tag">Node.js</span>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-2">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date" data-i18n="exp3.date">Juin – Oct. 2024 · Sfax</div>
+          <h3 data-i18n="exp3.title">Développeuse Full-Stack Web</h3>
+          <div class="timeline-company">Startup Advantry X</div>
+          <ul class="timeline-list" data-i18n="exp3.list">
+            <li>Maintenance et évolution d'une plateforme web de suivi de production.</li>
+            <li>Développement de nouvelles fonctionnalités selon les besoins métier.</li>
+            <li>Support technique et assistance directe aux utilisateurs.</li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="skill-tag">PHP natif</span><span class="skill-tag">HTML/CSS</span>
+            <span class="skill-tag">JavaScript</span><span class="skill-tag">jQuery</span><span
+              class="skill-tag">Ajax</span>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal reveal-delay-3">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date" data-i18n="exp4.date">Jan. – Juin 2024 · Sfax</div>
+          <h3 data-i18n="exp4.title">Stage de fin d'études — Plateforme GMAO</h3>
+          <div class="timeline-company">Advantry X</div>
+          <ul class="timeline-list" data-i18n="exp4.list">
+            <li>Conception et développement d'une plateforme web de gestion de maintenance assistée par ordinateur
+              (GMAO).</li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="skill-tag">PHP natif</span><span class="skill-tag">HTML</span><span
+              class="skill-tag">JavaScript</span>
+            <span class="skill-tag">CSS</span><span class="skill-tag">Ajax</span><span class="skill-tag">jQuery</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJETS -->
+  <section id="projets" style="background: var(--bg-alt); border-radius: 40px; margin: 0 40px;">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label" data-i18n="projects.label">Réalisations</span>
+        <h2 data-i18n="projects.title">Neuf projets, du modèle à l'interface</h2>
+        <p data-i18n="projects.subtitle">Une sélection de projets académiques et personnels qui couvrent l'IA,
+          l'ingénierie de données et le
+          développement d'applications complètes.</p>
+      </div>
+
+      <p class="scroll-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+        <span data-i18n="projects.hint">Faites glisser pour voir les 9 projets</span>
+      </p>
+
+      <div class="projects-scroll" id="projectsScroll">
+
+        <!-- PROJET 01 : DOCUMIND -->
+        <div class="project-card reveal reveal-delay-2">
+          <a class="project-github" href="https://github.com/NourMhadhbi/Documind.git" target="_blank" rel="noopener"
+            aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+          </a>
+          <div class="project-num">01</div>
+          <div class="project-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M6 3h9l4 4v14H6z" />
+              <path d="M15 3v5h5" />
+              <path d="M9 12h6" />
+              <path d="M9 15h6" />
+              <path d="M9 18h4" />
+              <circle cx="17" cy="16" r="2.5" />
+              <path d="M19 18l2 2" />
+            </svg>
+          </div>
+          <h3 data-i18n="proj1.title">DocuMind — Assistant RAG</h3>
+          <div class="project-desc" data-collapsed="true" data-i18n="proj1.desc">
+            <p>
+              <strong>DocuMind</strong> est un assistant conversationnel basé sur le RAG (Retrieval-Augmented
+              Generation), permettant d’interroger des documentations techniques en langage naturel et
+              d’obtenir des réponses contextualisées accompagnées de leurs sources.
+              <br><br>
+              Le projet couvre l’ensemble du pipeline RAG : ingestion et découpage des documents, génération
+              d’embeddings, recherche vectorielle avec ChromaDB et génération des réponses par un LLM. La
+              qualité du système est évaluée avec RAGAS et les expérimentations sont suivies avec MLflow.
+              <br><br>
+              L’application est exposée via une API FastAPI, conteneurisée avec Docker
+              et intégrée à un workflow CI/CD avec GitHub Actions, avec gestion du versionnement des
+              données via DVC et DagsHub.
+            </p>
+          </div>
+          <button class="toggle-desc" data-open-modal="proj-1">
+            <span data-i18n="projects.details">Détails du projet</span>
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+          </button>
+          <div class="project-stack">
+            <span>Python</span>
+            <span>RAG</span>
+            <span>LLMs</span>
+            <span>Sentence-Transformers</span>
+            <span>ChromaDB</span>
+            <span>FastAPI</span>
+            <span>Docker</span>
+            <span>RAGAS</span>
+            <span>MLflow</span>
+            <span>DVC</span>
+            <span>DagsHub</span>
+            <span>GitHub Actions</span>
+          </div>
+        </div>
+
+        <!-- PROJET 02 : RETAIL INTELLIGENCE PLATFORM -->
+        <div class="project-card reveal reveal-delay-1">
+          <a class="project-github" href="https://github.com/ZeinebGhrab/HM-Retail-Intelligence-platform.git"
+            target="_blank" rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+          </a>
+          <div class="project-num">02</div>
+          <div class="project-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M3 3h2l2 12h11l2-8H6" />
+              <circle cx="9" cy="19" r="1.6" />
+              <circle cx="17" cy="19" r="1.6" />
+              <path d="M9 8v6M13 8v6M17 8v6" />
+            </svg>
+          </div>
+          <h3 data-i18n="proj2.title">Retail Intelligence Platform</h3>
+          <div class="project-desc" data-collapsed="true" data-i18n="proj2.desc">
+            <p>
+              Plateforme de <strong>Retail Intelligence</strong> développée durant un stage d’été chez
+              Anavid, dédiée à l’exploitation et à l’analyse des données clients et
+              transactionnelles. L’objectif : transformer les données brutes en informations exploitables pour
+              l’analyse et la prise de décision.
+              <br><br>
+              Le projet s’appuie sur des pipelines Batch et Streaming avec
+              Apache Spark et Apache Kafka, intégrant la transformation et le
+              feature engineering pour préparer les données destinées aux modèles de
+              classification, régression et clustering.
+              <br><br>
+              Des dashboards Grafana ont été développés pour le suivi des
+              KPI commerciaux, intégrés via un embedding sécurisé. L’automatisation
+              des workflows est assurée par n8n.
+              <br><br>
+              Une chaîne MLOps complète a été mise en place : versionnement et traçabilité des
+              données avec DagsHub, suivi des expérimentations avec MLflow,
+              exposition des modèles via FastAPI et pipeline CI/CD avec GitHub
+              Actions. Enfin, une solution RAG/Chatbot permet une exploitation
+              conversationnelle des données.
+            </p>
+          </div>
+          <button class="toggle-desc" data-open-modal="proj-9">
+            <span data-i18n="projects.details">Détails du projet</span>
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+          </button>
+          <div class="project-stack">
+            <span>Python</span>
+            <span>Apache Spark</span>
+            <span>Apache Kafka</span>
+            <span>PostgreSQL</span>
+            <span>Scikit-learn</span>
+            <span>Grafana</span>
+            <span>n8n</span>
+            <span>MLflow</span>
+            <span>DagsHub</span>
+            <span>FastAPI</span>
+            <span>GitHub Actions</span>
+            <span>Ionic</span>
+            <span>React</span>
+          </div>
+        </div>
+
+        <!-- PROJET 03 : DÉTECTION AUTISME GNN -->
+        <div class="project-card reveal reveal-delay-2">
+          <a class="project-github" href="https://github.com/NourMhadhbi/Neuroscan-asd.git" target="_blank"
+            rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+          </a>
+          <div class="project-num">03</div>
+          <div class="project-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path
+                d="M12 2a4 4 0 0 0-4 4v1a4 4 0 0 0-4 4v1a4 4 0 0 0 2 3.46V17a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4v-1.54A4 4 0 0 0 20 12v-1a4 4 0 0 0-4-4V6a4 4 0 0 0-4-4z" />
+              <path d="M12 8v8M9 10h6M9 14h6" />
+            </svg>
+          </div>
+          <h3 data-i18n="proj3.title">Détection de l'autisme avec des Graph Neural Networks</h3>
+          <div class="project-desc" data-collapsed="true" data-i18n="proj3.desc">
+            <p>Projet de fin d'année consacré à la détection de l'autisme à partir de données de neuro-imagerie de la
+              base ABIDE I (Autism Brain Imaging Data Exchange). L'objectif était d'exploiter les Graph Neural Networks
+              (GNN) pour représenter les relations entre les différentes régions du cerveau et améliorer la
+              classification des sujets.</p>
+            <p>Le projet a porté sur plusieurs étapes, notamment le prétraitement des données, l'extraction des régions
+              d'intérêt (ROI), la construction des graphes de connectivité cérébrale et leur normalisation. Nous avons
+              ensuite appliqué le modèle GAT-LI (Graph Attention Network with Learnable Initialization) afin d'apprendre
+              les caractéristiques et les relations présentes dans les graphes.</p>
+            <p>Les performances du modèle ont été évaluées à travers plusieurs métriques, notamment l'accuracy, la
+              sensibilité, la spécificité, le score F1 et l'AUC, afin d'analyser sa capacité à distinguer les sujets
+              avec et sans autisme.</p>
+            <p>Ce projet m'a permis d'approfondir mes connaissances en Deep Learning, Graph Neural Networks et
+              traitement de données de neuro-imagerie, tout en développant une expérience pratique avec PyTorch,
+              Scikit-learn et NumPy. Projet réalisé en collaboration avec Abid Safa.</p>
+          </div>
+          <button class="toggle-desc" data-open-modal="proj-2">
+            <span data-i18n="projects.details">Détails du projet</span>
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+          </button>
+          <div class="project-stack"><span>Python</span><span>PyTorch</span><span>Graph Neural
+              Networks</span><span>Scikit-learn</span><span>NumPy</span></div>
+        </div>
+
+        <!-- PROJET 04 : SHOP LIFTING -->
+        <div class="project-card reveal reveal-delay-3">
+          <a class="project-github" href="https://github.com/nour-mhadhbi/anavid-shop-lifting" target="_blank"
+            rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+          </a>
+          <div class="project-num">04</div>
+          <div class="project-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M3 3h18v4H3zM3 10h18v11H3z" />
+              <path d="M8 10v11M16 10v11" />
+              <circle cx="12" cy="6" r="1" />
+            </svg>
+          </div>
+          <h3 data-i18n="proj4.title">Shop Lifting — Anavid Smart Retail Platform</h3>
+          <div class="project-desc" data-collapsed="true" data-i18n="proj4.desc">
+            <p>Projet de développement d'une solution de détection de vol en environnement retail, intégrée à la
+              plateforme Anavid Smart Retail. L'objectif était de mettre en place une architecture permettant de gérer
+              et de transmettre les alertes issues de la détection vidéo vers une application mobile.</p>
+            <p>Le projet comprend le développement d'API REST authentifiées par token avec Django REST Framework,
+              permettant de gérer les données et les alertes générées par le système de détection. Ces endpoints sont
+              consommés par une interface mobile développée avec Ionic React, offrant un accès aux alertes et aux
+              informations associées.</p>
+            <p>L'architecture intègre également Redis pour la gestion du cache et MySQL pour la persistance des données.
+              L'ensemble des composants a été conteneurisé et déployé avec Docker Compose, permettant d'orchestrer les
+              différents services de la plateforme.</p>
+            <p>Ce projet m'a permis de renforcer mes compétences en développement d'API REST, développement mobile,
+              gestion des bases de données, mise en cache et conteneurisation, tout en travaillant sur une application
+              concrète dans le domaine du Smart Retail.</p>
+          </div>
+          <button class="toggle-desc" data-open-modal="proj-3">
+            <span data-i18n="projects.details">Détails du projet</span>
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+          </button>
+          <div class="project-stack"><span>Python</span><span>Django REST Framework</span><span>Redis</span><span>Ionic
+              React</span><span>MySQL</span><span>Docker Compose</span></div>
+        </div>
+
+        <!-- PROJET 05 : GESTIONNAIRE DE TÂCHES -->
+        <div class="project-card reveal reveal-delay-4">
+          <a class="project-github" href="https://github.com/nour-mhadhbi/smart-task-manager" target="_blank"
+            rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+          </a>
+          <div class="project-num">05</div>
+          <div class="project-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="17" rx="2" />
+              <path d="M3 9h18M8 2v4M16 2v4" />
+              <path d="M8 14l2 2 4-4" />
+            </svg>
+          </div>
+          <h3 data-i18n="proj5.title">Gestionnaire de tâches intelligent</h3>
+          <div class="project-desc" data-collapsed="true" data-i18n="proj5.desc">
+            <p>Projet de développement d’une solution de gestion et de suivi intelligent des tâches, conçue pour
+              faciliter la répartition du travail au sein des équipes et améliorer le suivi de l’avancement des projets.
+              <br><br>
+              L’application propose une affectation intelligente des tâches en prenant en compte plusieurs critères,
+              notamment les compétences, la charge de travail et la disponibilité des membres. Cette approche permet
+              d’attribuer les tâches en fonction des ressources disponibles et des besoins du projet.
+              <br><br>
+              Le projet intègre également une timeline interactive de type Kanban, permettant de visualiser les tâches
+              et leur progression. L’état de chaque tâche ainsi que l’avancement global des projets sont calculés
+              automatiquement à partir des données disponibles. Un mécanisme de détection des projets à risque permet
+              par ailleurs d’identifier les situations nécessitant une attention particulière.
+              <br><br>
+              Ce projet m’a permis de développer mes compétences en gestion de projet, conception de fonctionnalités
+              intelligentes et développement d’applications interactives, tout en travaillant sur l’automatisation du
+              suivi et de la prise de décision.
+            </p>
+          </div>
+          <button class="toggle-desc" data-open-modal="proj-4">
+            <span data-i18n="projects.details">Détails du projet</span>
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+          </button>
+          <div class="project-stack"><span>Spring Boot</span><span>Spring Data
+              JPA</span><span>MySQL</span><span>Thymeleaf</span><span>Bootstrap</span></div>
+        </div>
+
+        <!-- PROJET 06 : EDUADMIN -->
+        <div class="project-card reveal reveal-delay-1">
+          <a class="project-github" href="https://github.com/NourMhadhbi/EduAdmin.git" target="_blank" rel="noopener"
+            aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+          </a>
+          <div class="project-num">06</div>
+          <div class="project-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M22 10L12 5 2 10l10 5 10-5z" />
+              <path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5" />
+            </svg>
+          </div>
+          <h3 data-i18n="proj6.title">EduAdmin (OnLearn) — Gestion des présences</h3>
+          <div class="project-desc" data-collapsed="true" data-i18n="proj6.desc">
+            <p>Projet de développement d’une application de gestion des présences académiques, conçue pour faciliter le
+              suivi des étudiants et la gestion des absences au sein d’un établissement d’enseignement.
+              <br><br>
+              L’application repose sur une architecture MVC développée en PHP natif et propose trois rôles distincts :
+              Administrateur, Enseignant et Étudiant. Chaque rôle dispose de fonctionnalités adaptées à ses besoins,
+              permettant notamment la gestion des utilisateurs, le suivi des présences et la consultation des
+              informations associées.
+              <br><br>
+              Le projet intègre un système de pointage automatique par reconnaissance faciale, basé sur DeepFace, en
+              complément du marquage manuel des présences. Il comprend également des fonctionnalités d’export des
+              données au format Excel et PDF, ainsi que l’envoi d’emails automatiques pour faciliter la communication et
+              le suivi des absences.
+              <br><br>
+              Ce projet m’a permis de renforcer mes compétences en développement web, conception MVC, gestion des bases
+              de données et intégration de solutions d’intelligence artificielle, notamment dans le domaine de la
+              reconnaissance faciale.
+            </p>
+          </div>
+          <button class="toggle-desc" data-open-modal="proj-5">
+            <span data-i18n="projects.details">Détails du projet</span>
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+          </button>
+          <div class="project-stack"><span>PHP natif</span><span>MySQL / PDO</span><span>Python ·
+              DeepFace</span><span>PHPMailer</span><span>Dompdf</span></div>
+        </div>
+
+        <!-- PROJET 07 : GESTION FACTURES -->
+        <div class="project-card reveal reveal-delay-2">
+          <a class="project-github" href="https://github.com/nour-mhadhbi/invoice-manager-flask" target="_blank"
+            rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+          </a>
+          <div class="project-num">07</div>
+          <div class="project-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="M9 13h6M9 17h6M9 9h2" />
+            </svg>
+          </div>
+          <h3 data-i18n="proj7.title">Application de gestion de factures</h3>
+          <div class="project-desc" data-collapsed="true" data-i18n="proj7.desc">
+            <p>Projet de développement d’une application dédiée à la gestion et au suivi des factures, permettant de
+              centraliser les informations financières et de faciliter le suivi des règlements.
+              <br><br>
+              L’application a été développée avec Flask selon une approche orientée objet et intègre un mécanisme de
+              suivi automatique de l’état des factures en fonction du montant réglé. Cette fonctionnalité permet de
+              déterminer automatiquement la situation de chaque facture et de faciliter le suivi des paiements.
+              Le projet comprend également la génération de factures au format PDF ainsi que la production de rapports
+              financiers.
+              <br><br>
+              Ce projet m’a permis de renforcer mes compétences en développement web avec Flask, programmation orientée
+              objet, génération de documents, gestion financière et conteneurisation.
+            </p>
+          </div>
+          <button class="toggle-desc" data-open-modal="proj-6">
+            <span data-i18n="projects.details">Détails du projet</span>
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+          </button>
+          <div class="project-stack">
+            <span>Python</span><span>Flask</span><span>MySQL</span><span>FPDF</span><span>Docker</span>
+          </div>
+        </div>
+
+        <!-- PROJET 08 : RÉSERVATION MUNICIPALE -->
+        <div class="project-card reveal reveal-delay-3">
+          <a class="project-github" href="https://github.com/nour-mhadhbi/municipal-reservation" target="_blank"
+            rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+          </a>
+          <div class="project-num">08</div>
+          <div class="project-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M3 21h18M5 21V7l7-4 7 4v14" />
+              <path d="M9 21v-6h6v6M9 10h.01M15 10h.01M9 14h.01M15 14h.01" />
+            </svg>
+          </div>
+          <h3 data-i18n="proj8.title">Plateforme de réservation municipale</h3>
+          <div class="project-desc" data-collapsed="true" data-i18n="proj8.desc">
+            <p>Projet de développement d’une application de gestion des réservations pour une municipalité, visant à
+              faciliter la gestion des demandes de réservation ainsi que leur suivi.
+              <br><br>
+              L’application repose sur un backend développé avec Spring Boot, permettant de gérer la logique métier et
+              les différentes opérations liées aux réservations. Une interface destinée aux citoyens, développée avec
+              HTML et Bootstrap, permet aux utilisateurs d’interagir avec la plateforme et d’effectuer leurs demandes de
+              réservation.
+              <br><br>
+              Ce projet m’a permis de renforcer mes compétences en développement d’applications web, conception d’API et
+              services backend avec Spring Boot, ainsi qu’en intégration d’interfaces web responsives.
+            </p>
+          </div>
+          <button class="toggle-desc" data-open-modal="proj-7">
+            <span data-i18n="projects.details">Détails du projet</span>
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+          </button>
+          <div class="project-stack"><span>Spring Boot</span><span>Bootstrap</span><span>HTML</span></div>
+        </div>
+
+        <!-- PROJET 09 : APPLICATION MOBILE COSMÉTIQUE -->
+        <div class="project-card reveal reveal-delay-1">
+          <a class="project-github" href="https://github.com/nour-mhadhbi/cosmetics-mobile-app" target="_blank"
+            rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+          </a>
+          <div class="project-num">09</div>
+          <div class="project-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="6" y="2" width="12" height="20" rx="3" />
+              <path d="M11 18h2" />
+              <path d="M12 6v6M9 9h6" />
+            </svg>
+          </div>
+          <h3 data-i18n="proj9.title">Application mobile cosmétique</h3>
+          <div class="project-desc" data-collapsed="true" data-i18n="proj9.desc">
+            <p>Projet de développement d'une application mobile dédiée au domaine de la cosmétique, conçue pour proposer
+              une expérience utilisateur simple et adaptée aux besoins d'un cas d'usage cosmétique.
+              <br><br>
+              L'application a été développée avec Flutter, permettant de concevoir une interface mobile multiplateforme
+              et interactive. Elle intègre un système d'authentification des utilisateurs ainsi que le stockage et la
+              gestion des données avec Firebase, assurant la communication entre l'application et les services backend.
+              <br><br>
+              Ce projet m'a permis de renforcer mes compétences en développement mobile multiplateforme, conception
+              d'interfaces utilisateur et intégration de services cloud, notamment pour la gestion de l'authentification
+              et des données.
+            </p>
+          </div>
+          <button class="toggle-desc" data-open-modal="proj-8">
+            <span data-i18n="projects.details">Détails du projet</span>
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            </svg>
+          </button>
+          <div class="project-stack"><span>Flutter</span><span>Dart</span><span>Firebase</span></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPÉTENCES -->
+  <section id="competences">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label" data-i18n="skills.label">Compétences techniques</span>
+        <h2 data-i18n="skills.title">Ce avec quoi je travaille</h2>
+        <p data-i18n="skills.subtitle">Un socle technique complet, du stockage à la mise en production de modèles.</p>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-card reveal reveal-delay-4">
+          <div class="skill-icon">🛠️</div>
+          <h3 data-i18n="skills.cat.bigdata">Big Data &amp; Streaming</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Apache Spark</span><span class="skill-tag">Apache Kafka</span>
+          </div>
+        </div>
+        <div class="skill-card reveal reveal-delay-1">
+          <div class="skill-icon">📈</div>
+          <h3 data-i18n="skills.cat.mlops">MLOps &amp; Monitoring</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">MLflow</span> <span class="skill-tag">DagsHub</span> <span class="skill-tag">GitHub
+              Actions </span><span class="skill-tag">Grafana</span><span class="skill-tag">n8n</span>
+          </div>
+        </div>
+        <div class="skill-card reveal reveal-delay-1">
+          <div class="skill-icon">💻</div>
+          <h3 data-i18n="skills.cat.languages">Langages de programmation</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Java</span><span class="skill-tag">Python</span><span class="skill-tag">Scala</span>
+            <span class="skill-tag">C</span><span class="skill-tag">JavaScript</span><span class="skill-tag">PHP</span>
+            <span class="skill-tag">C#</span><span class="skill-tag">Dart</span><span class="skill-tag">PL/SQL</span>
+          </div>
+        </div>
+
+        <div class="skill-card reveal reveal-delay-2">
+          <div class="skill-icon">🧩</div>
+          <h3 data-i18n="skills.cat.frameworks">Frameworks &amp; bibliothèques</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Spring Boot</span><span class="skill-tag">FastAPI</span><span
+              class="skill-tag">React</span>
+            <span class="skill-tag">Express.js</span><span class="skill-tag">Symfony</span><span
+              class="skill-tag">Laravel</span>
+            <span class="skill-tag">Flutter</span><span class="skill-tag">Ionic</span>
+          </div>
+        </div>
+
+        <div class="skill-card reveal reveal-delay-3">
+          <div class="skill-icon">🗄️</div>
+          <h3 data-i18n="skills.cat.db">Bases de données</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">PostgreSQL</span><span class="skill-tag">MySQL</span><span
+              class="skill-tag">MongoDB</span>
+          </div>
+        </div>
+
+        <div class="skill-card reveal reveal-delay-2">
+          <div class="skill-icon">🧰</div>
+          <h3 data-i18n="skills.cat.tools">Outils &amp; environnements</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">GitHub</span><span class="skill-tag">Linux</span><span class="skill-tag">VS
+              Code</span>
+            <span class="skill-tag">IntelliJ IDEA</span><span class="skill-tag">Node.js</span><span
+              class="skill-tag">Jupyter Notebook</span><span class="skill-tag">Android Studio</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AU-DELÀ DU CODE -->
+  <section style="background: var(--bg-alt); border-radius: 40px; margin: 0 40px;">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2 data-i18n="motivation.title">Ce qui me motive</h2>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-card reveal reveal-delay-1">
+          <div class="skill-icon">🎓</div>
+          <h3 data-i18n="motivation.assoc.title">Vie associative</h3>
+          <p data-i18n="motivation.assoc.desc">Membre du Microsoft Tech Club, FSEGS — participation à des initiatives
+            autour des technologies
+            intelligentes et du développement professionnel.</p>
+        </div>
+        <div class="skill-card reveal reveal-delay-2">
+          <div class="skill-icon">💡</div>
+          <h3 data-i18n="motivation.interests.title">Centres d'intérêt</h3>
+          <p data-i18n="motivation.interests.desc">Intelligence artificielle, transformation digitale, Industrie 4.0,
+            Machine Learning, Deep Learning, Data
+            Science.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <div class="contact-inner reveal">
+      <span class="section-label" data-i18n="contact.label">Contact</span>
+      <h2 data-i18n="contact.title">Parlons données et IA</h2>
+      <p data-i18n="contact.subtitle">Ouverte aux stages en IA, Data Engineering ou Data Science.</p>
+      <div class="contact-actions">
+        <a href="mailto:mhadhbinouur@gmail.com" class="btn btn-primary">
+          <span data-i18n="contact.email">Envoyer un email</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/in/mhadhbi-nour-14a386253" target="_blank" class="btn btn-ghost"
+          data-i18n="contact.linkedin">Voir mon
+          LinkedIn</a>
+      </div>
+
+      <div class="social-links">
+        <a href="mailto:mhadhbinouur@gmail.com" class="social-link" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M22 6l-10 7L2 6" />
+            <path d="M2 6h20v12H2z" />
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/in/mhadhbi-nour-14a386253" target="_blank" class="social-link"
+          aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8.1h4.56V23H.22V8.1zM8.34 8.1h4.37v2.04h.06c.61-1.16 2.1-2.38 4.32-2.38 4.62 0 5.47 3.04 5.47 7v8.24h-4.56v-7.3c0-1.74-.03-3.98-2.43-3.98-2.43 0-2.8 1.9-2.8 3.86V23H8.34V8.1z" />
+          </svg>
+        </a>
+        <a href="tel:+21620714492" class="social-link" aria-label="Téléphone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p data-i18n="footer">© 2026 Nour Mhadhbi</p>
+  </footer>
+
+  <!-- ============================================================ -->
+  <!-- SCRIPTS -->
+  <!-- ============================================================ -->
+  <script>
+    // ============================================================
+    // ==== TRADUCTION MANUELLE FR / EN (fiable, sans Google) ====
+    // ============================================================
+    const I18N = {
+      fr: {
+        "nav.about": "À propos",
+        "nav.education": "Parcours",
+        "nav.experience": "Expérience",
+        "nav.projects": "Projets",
+        "nav.skills": "Compétences",
+        "nav.contact": "Me contacter",
+        "hero.tag": "Ouverte aux stages IA / Data",
+        "hero.title": 'Étudiante ingénieure en <em>IA</em> & Data Engineering',
+        "hero.lede": "Je conçois et développe des solutions en ingénierie des données et en intelligence artificielle, en intervenant sur la conception de pipelines de données, le machine learning, le deep learning et le MLOps. Je développe également des solutions d'IA générative, notamment des systèmes RAG, des chatbots intelligents et des agents IA. Mon approche consiste à transformer les données et les modèles en solutions concrètes, fiables et évolutives, adaptées aux besoins des applications et des utilisateurs.",
+        "hero.btn.projects": "Voir mes projets",
+        "hero.btn.contact": "Me contacter",
+        "hero.btn.cvfr": "CV (FR)",
+        "hero.btn.cven": "CV (EN)",
+        "hero.card.title": "En quelques chiffres",
+        "hero.stat.internships": "Stages réalisés",
+        "hero.stat.projects": "Projets réalisés",
+        "hero.stat.languages": "Langues parlées",
+        "hero.stat.tech": "Technologies maîtrisées",
+        "about.label": "Profil",
+        "about.title": "Étudiante Ingénieure spécialisée en Data Engineering et Intelligence Artificielle",
+        "about.p1": "Je suis étudiante en 3ᵉ année du cycle ingénieur en <strong>Ingénierie des Données et Systèmes Décisionnels</strong> à l'ENET'Com, Sfax. Diplômée en Informatique Appliquée à la Gestion de la FSEGS de Sfax, je suis également titulaire d'un double diplôme de l'Université du Mans, en France.",
+        "about.p2": "Mon parcours se situe à l'intersection de la <strong>Data Engineering, de la Data Science, du MLOps et du développement full-stack</strong>. Je m'intéresse particulièrement à la conception de pipelines de données, au traitement et à la valorisation de la donnée, ainsi qu'au développement des applications qui rendent ces données réellement exploitables.",
+        "about.p3": "Ce qui me motive, c'est de transformer des données brutes en solutions concrètes et fiables — en combinant rigueur d'ingénierie, curiosité scientifique et sens du produit fini.",
+        "about.fact.location": "Basée à",
+        "about.fact.domain": "Domaine",
+        "about.fact.languages": "Langues",
+        "about.fact.availability": "Disponibilité",
+        "about.fact.contact": "Contact",
+        "about.fact.location.value": "Sfax, Tunisie",
+        "about.fact.domain.value": "IA & Ingénierie des données",
+        "about.fact.languages.value": "Arabe · Français · Anglais",
+        "about.fact.availability.value": "Ouverte aux stages",
+        "education.label": "Parcours",
+        "education.title": "Parcours académique",
+        "education.subtitle": "Un cheminement cohérent entre ingénierie logicielle, données et science des données.",
+        "experience.label": "Expérience",
+        "experience.title": "Là où j'ai livré, en équipe et en autonomie",
+        "projects.label": "Réalisations",
+        "projects.title": "Neuf projets, du modèle à l'interface",
+        "projects.subtitle": "Une sélection de projets académiques et personnels qui couvrent l'IA, l'ingénierie de données et le développement d'applications complètes.",
+        "projects.hint": "Faites glisser pour voir les 9 projets",
+        "projects.details": "Détails du projet",
+        "skills.label": "Compétences techniques",
+        "skills.title": "Ce avec quoi je travaille",
+        "skills.subtitle": "Un socle technique complet, du stockage à la mise en production de modèles.",
+        "motivation.title": "Ce qui me motive",
+        "contact.label": "Contact",
+        "contact.title": "Parlons données et IA",
+        "contact.subtitle": "Ouverte aux stages en IA, Data Engineering ou Data Science.",
+        "contact.email": "Envoyer un email",
+        "contact.linkedin": "Voir mon LinkedIn",
+        "footer": "© 2026 Nour Mhadhbi",
+        "edu1.date": "2024 — Présent",
+        "edu1.title": "Cycle ingénieur — Ingénierie des Données & Systèmes Décisionnels (IDSD)",
+        "edu1.desc": "Programme spécialisé en ingénierie des données, algorithmes de machine learning et systèmes d'aide à la décision.",
+        "edu2.date": "2021 — 2024",
+        "edu2.title": "Licence en Informatique Appliquée à la Gestion",
+        "edu2.company": "FSEGS, Sfax · Double diplôme, Université du Mans, France",
+        "edu3.date": "2020 — 2021",
+        "edu3.title": "Baccalauréat, Sciences Expérimentales",
+        "exp1.date": "Juin 2026 · Sfax",
+        "exp1.title": "Stagiaire — Retail Intelligence Platform",
+        "exp1.list": "<li>Développement d'une plateforme de Retail Intelligence dédiée au traitement et à l'analyse des données clients et transactionnelles</li><li>Mise en œuvre de pipelines Batch et Streaming avec Apache Kafka et Apache Spark, intégrant le traitement et le feature engineering des données pour l'entraînement de modèles de classification, régression et clustering.</li><li>Automatisation et orchestration des workflows avec n8n.</li><li>Développement de dashboards Grafana pour le suivi des KPIs et intégration des visualisations à l'interface de la plateforme.</li><li>Mise en œuvre de pratiques MLOps : suivi et versionnement des modèles et des données avec MLflow et DagsHub, exposition via API FastAPI, et automatisation des workflows CI/CD avec GitHub Actions.</li><li>Développement d'une solution RAG/Chatbot pour l'exploitation intelligente des données.</li>",
+        "exp2.date": "Juillet 2025 · Sfax",
+        "exp2.title": "Stagiaire d'été — Plateforme DomiService",
+        "exp2.list": "<li>Conception et développement d'une plateforme web de mise en relation entre clients et prestataires de services à domicile.</li><li>Modélisation de la base de données et développement de l'API avec Node.js / Express.js.</li><li>Développement de l'interface utilisateur avec React.js.</li>",
+        "exp3.date": "Juin – Oct. 2024 · Sfax",
+        "exp3.title": "Développeuse Full-Stack Web",
+        "exp3.list": "<li>Maintenance et évolution d'une plateforme web de suivi de production.</li><li>Développement de nouvelles fonctionnalités selon les besoins métier.</li><li>Support technique et assistance directe aux utilisateurs.</li>",
+        "exp4.date": "Jan. – Juin 2024 · Sfax",
+        "exp4.title": "Stage de fin d'études — Plateforme GMAO",
+        "exp4.list": "<li>Conception et développement d'une plateforme web de gestion de maintenance assistée par ordinateur (GMAO).</li>",
+        "proj1.title": "DocuMind — Assistant RAG",
+        "proj1.desc": "<p><strong>DocuMind</strong> est un assistant conversationnel basé sur le RAG (Retrieval-Augmented Generation), permettant d'interroger des documentations techniques en langage naturel et d'obtenir des réponses contextualisées accompagnées de leurs sources.<br><br>Le projet couvre l'ensemble du pipeline RAG : ingestion et découpage des documents, génération d'embeddings, recherche vectorielle avec ChromaDB et génération des réponses par un LLM. La qualité du système est évaluée avec RAGAS et les expérimentations sont suivies avec MLflow.<br><br>L'application est exposée via une API FastAPI, conteneurisée avec Docker et intégrée à un workflow CI/CD avec GitHub Actions, avec gestion du versionnement des données via DVC et DagsHub.</p>",
+        "proj1.modal.num": "PROJET 01",
+        "proj1.modal.title": "DocuMind — Assistant conversationnel RAG",
+        "proj1.modal.body": "<p><strong>DocuMind</strong> est un assistant conversationnel basé sur le RAG (Retrieval-Augmented Generation), permettant d'interroger des documentations techniques en langage naturel et d'obtenir des réponses contextualisées accompagnées de leurs sources.</p><p>Le projet couvre l'ensemble du pipeline RAG : ingestion et découpage des documents, génération d'embeddings, recherche vectorielle avec ChromaDB et génération des réponses par un LLM. La qualité du système est évaluée avec RAGAS et les expérimentations sont suivies avec MLflow.</p><p>L'application est exposée via une API FastAPI, conteneurisée avec Docker et intégrée à un workflow CI/CD avec GitHub Actions, avec gestion du versionnement des données via DVC et DagsHub.</p><p>Statut : <span style='color: #d89b3d;'>En cours de développement</span></p>",
+        "proj2.title": "Retail Intelligence Platform",
+        "proj2.desc": "<p>Plateforme de <strong>Retail Intelligence</strong> développée durant un stage d'été chez Anavid, dédiée à l'exploitation et à l'analyse des données clients et transactionnelles. L'objectif : transformer les données brutes en informations exploitables pour l'analyse et la prise de décision.<br><br>Le projet s'appuie sur des pipelines Batch et Streaming avec Apache Spark et Apache Kafka, intégrant la transformation et le feature engineering pour préparer les données destinées aux modèles de classification, régression et clustering.<br><br>Des dashboards Grafana ont été développés pour le suivi des KPI commerciaux, intégrés via un embedding sécurisé. L'automatisation des workflows est assurée par n8n.<br><br>Une chaîne MLOps complète a été mise en place : versionnement et traçabilité des données avec DagsHub, suivi des expérimentations avec MLflow, exposition des modèles via FastAPI et pipeline CI/CD avec GitHub Actions. Enfin, une solution RAG/Chatbot permet une exploitation conversationnelle des données.</p>",
+        "proj2.modal.num": "PROJET 02",
+        "proj2.modal.title": "Retail Intelligence Platform",
+        "proj2.modal.body": "<p>Projet réalisé dans le cadre d'un stage d'été, consacré au développement d'une plateforme de Retail Intelligence pour l'exploitation et l'analyse des données clients et transactionnelles. L'objectif était de construire une chaîne complète permettant de transformer les données brutes en informations exploitables pour l'analyse et la prise de décision.</p><p>Mise en place de pipelines Batch et Streaming avec Apache Spark et Kafka, incluant la transformation des données et le feature engineering pour préparer les données destinées aux modèles de Machine Learning (classification, régression et clustering).</p><p>Des dashboards Grafana ont été développés pour le suivi des principaux KPI commerciaux, puis intégrés à l'interface de la plateforme via un mécanisme d'embedding sécurisé, permettant de centraliser l'accès aux indicateurs et aux analyses.</p><p>L'automatisation des workflows a été réalisée avec n8n pour orchestrer les traitements, déclencher des actions et gérer certaines notifications.</p><p>Une chaîne MLOps a été mise en place pour assurer le suivi du cycle de vie des modèles, avec le versionnement et la traçabilité des données via DagsHub, le suivi des expérimentations et des modèles avec MLflow, ainsi que l'exposition des modèles via FastAPI. L'ensemble du processus de développement et de déploiement a été automatisé à travers un pipeline CI/CD avec GitHub Actions, incluant l'exécution des tests, les contrôles de qualité et la construction des artefacts nécessaires au déploiement.</p><p>Enfin, une solution RAG/Chatbot a été développée pour permettre une exploitation conversationnelle des données et des résultats produits par la plateforme.</p><p>Cette expérience m'a permis de mettre en pratique des compétences en Data Engineering, Big Data, Machine Learning, MLOps, Data Visualization et automatisation, tout en travaillant sur une architecture couvrant l'ensemble de la chaîne, de l'ingestion et du traitement des données jusqu'à leur analyse, leur visualisation et l'exploitation des modèles.</p>",
+        "proj3.title": "Détection de l'autisme avec des Graph Neural Networks",
+        "proj3.desc": "<p>Projet de fin d'année consacré à la détection de l'autisme à partir de données de neuro-imagerie de la base ABIDE I (Autism Brain Imaging Data Exchange). L'objectif était d'exploiter les Graph Neural Networks (GNN) pour représenter les relations entre les différentes régions du cerveau et améliorer la classification des sujets.</p><p>Le projet a porté sur plusieurs étapes, notamment le prétraitement des données, l'extraction des régions d'intérêt (ROI), la construction des graphes de connectivité cérébrale et leur normalisation. Nous avons ensuite appliqué le modèle GAT-LI (Graph Attention Network with Learnable Initialization) afin d'apprendre les caractéristiques et les relations présentes dans les graphes.</p><p>Les performances du modèle ont été évaluées à travers plusieurs métriques, notamment l'accuracy, la sensibilité, la spécificité, le score F1 et l'AUC, afin d'analyser sa capacité à distinguer les sujets avec et sans autisme.</p><p>Ce projet m'a permis d'approfondir mes connaissances en Deep Learning, Graph Neural Networks et traitement de données de neuro-imagerie, tout en développant une expérience pratique avec PyTorch, Scikit-learn et NumPy. Projet réalisé en collaboration avec Abid Safa.</p>",
+        "proj3.modal.num": "PROJET 03",
+        "proj3.modal.title": "Détection de l'autisme avec des Graph Neural Networks",
+        "proj3.modal.body": "<p>Projet de fin d'année consacré à la détection de l'autisme à partir de données de neuro-imagerie de la base ABIDE I (Autism Brain Imaging Data Exchange). L'objectif était d'exploiter les Graph Neural Networks (GNN) pour représenter les relations entre les différentes régions du cerveau et améliorer la classification des sujets.</p><p>Le projet a porté sur plusieurs étapes, notamment le prétraitement des données, l'extraction des régions d'intérêt (ROI), la construction des graphes de connectivité cérébrale et leur normalisation. Nous avons ensuite appliqué le modèle GAT-LI (Graph Attention Network with Learnable Initialization) afin d'apprendre les caractéristiques et les relations présentes dans les graphes.</p><p>Les performances du modèle ont été évaluées à travers plusieurs métriques, notamment l'accuracy, la sensibilité, la spécificité, le score F1 et l'AUC, afin d'analyser sa capacité à distinguer les sujets avec et sans autisme.</p><p>Ce projet m'a permis d'approfondir mes connaissances en Deep Learning, Graph Neural Networks et traitement de données de neuro-imagerie, tout en développant une expérience pratique avec PyTorch, Scikit-learn et NumPy. Projet réalisé en collaboration avec Abid Safa.</p>",
+        "proj4.title": "Shop Lifting — Anavid Smart Retail Platform",
+        "proj4.desc": "<p>Projet de développement d'une solution de détection de vol en environnement retail, intégrée à la plateforme Anavid Smart Retail. L'objectif était de mettre en place une architecture permettant de gérer et de transmettre les alertes issues de la détection vidéo vers une application mobile.</p><p>Le projet comprend le développement d'API REST authentifiées par token avec Django REST Framework, permettant de gérer les données et les alertes générées par le système de détection. Ces endpoints sont consommés par une interface mobile développée avec Ionic React, offrant un accès aux alertes et aux informations associées.</p><p>L'architecture intègre également Redis pour la gestion du cache et MySQL pour la persistance des données. L'ensemble des composants a été conteneurisé et déployé avec Docker Compose, permettant d'orchestrer les différents services de la plateforme.</p><p>Ce projet m'a permis de renforcer mes compétences en développement d'API REST, développement mobile, gestion des bases de données, mise en cache et conteneurisation, tout en travaillant sur une application concrète dans le domaine du Smart Retail.</p>",
+        "proj4.modal.num": "PROJET 04",
+        "proj4.modal.title": "Shop Lifting — Anavid Smart Retail Platform",
+        "proj4.modal.body": "<p>Projet de développement d'une solution de détection de vol en environnement retail, intégrée à la plateforme Anavid Smart Retail. L'objectif était de mettre en place une architecture permettant de gérer et de transmettre les alertes issues de la détection vidéo vers une application mobile.</p><p>Le projet comprend le développement d'API REST authentifiées par token avec Django REST Framework, permettant de gérer les données et les alertes générées par le système de détection. Ces endpoints sont consommés par une interface mobile développée avec Ionic React, offrant un accès aux alertes et aux informations associées.</p><p>L'architecture intègre également Redis pour la gestion du cache et MySQL pour la persistance des données. L'ensemble des composants a été conteneurisé et déployé avec Docker Compose, permettant d'orchestrer les différents services de la plateforme.</p><p>Ce projet m'a permis de renforcer mes compétences en développement d'API REST, développement mobile, gestion des bases de données, mise en cache et conteneurisation, tout en travaillant sur une application concrète dans le domaine du Smart Retail.</p>",
+        "proj5.title": "Gestionnaire de tâches intelligent",
+        "proj5.desc": "<p>Projet de développement d'une solution de gestion et de suivi intelligent des tâches, conçue pour faciliter la répartition du travail au sein des équipes et améliorer le suivi de l'avancement des projets.<br><br>L'application propose une affectation intelligente des tâches en prenant en compte plusieurs critères, notamment les compétences, la charge de travail et la disponibilité des membres. Cette approche permet d'attribuer les tâches en fonction des ressources disponibles et des besoins du projet.<br><br>Le projet intègre également une timeline interactive de type Kanban, permettant de visualiser les tâches et leur progression. L'état de chaque tâche ainsi que l'avancement global des projets sont calculés automatiquement à partir des données disponibles. Un mécanisme de détection des projets à risque permet par ailleurs d'identifier les situations nécessitant une attention particulière.<br><br>Ce projet m'a permis de développer mes compétences en gestion de projet, conception de fonctionnalités intelligentes et développement d'applications interactives, tout en travaillant sur l'automatisation du suivi et de la prise de décision.</p>",
+        "proj5.modal.num": "PROJET 05",
+        "proj5.modal.title": "Gestionnaire de tâches intelligent",
+        "proj5.modal.body": "<p>Projet de développement d'une solution de gestion et de suivi intelligent des tâches, conçue pour faciliter la répartition du travail au sein des équipes et améliorer le suivi de l'avancement des projets.</p><p>L'application propose une affectation intelligente des tâches en prenant en compte plusieurs critères, notamment les compétences, la charge de travail et la disponibilité des membres. Cette approche permet d'attribuer les tâches en fonction des ressources disponibles et des besoins du projet.</p><p>Le projet intègre également une timeline interactive de type Kanban, permettant de visualiser les tâches et leur progression. L'état de chaque tâche ainsi que l'avancement global des projets sont calculés automatiquement à partir des données disponibles. Un mécanisme de détection des projets à risque permet par ailleurs d'identifier les situations nécessitant une attention particulière.</p><p>Ce projet m'a permis de développer mes compétences en gestion de projet, conception de fonctionnalités intelligentes et développement d'applications interactives, tout en travaillant sur l'automatisation du suivi et de la prise de décision.</p>",
+        "proj6.title": "EduAdmin (OnLearn) — Gestion des présences",
+        "proj6.desc": "<p>Projet de développement d'une application de gestion des présences académiques, conçue pour faciliter le suivi des étudiants et la gestion des absences au sein d'un établissement d'enseignement.<br><br>L'application repose sur une architecture MVC développée en PHP natif et propose trois rôles distincts : Administrateur, Enseignant et Étudiant. Chaque rôle dispose de fonctionnalités adaptées à ses besoins, permettant notamment la gestion des utilisateurs, le suivi des présences et la consultation des informations associées.<br><br>Le projet intègre un système de pointage automatique par reconnaissance faciale, basé sur DeepFace, en complément du marquage manuel des présences. Il comprend également des fonctionnalités d'export des données au format Excel et PDF, ainsi que l'envoi d'emails automatiques pour faciliter la communication et le suivi des absences.<br><br>Ce projet m'a permis de renforcer mes compétences en développement web, conception MVC, gestion des bases de données et intégration de solutions d'intelligence artificielle, notamment dans le domaine de la reconnaissance faciale.</p>",
+        "proj6.modal.num": "PROJET 06",
+        "proj6.modal.title": "EduAdmin (OnLearn) — Gestion des présences",
+        "proj6.modal.body": "<p>Projet de développement d'une application de gestion des présences académiques, conçue pour faciliter le suivi des étudiants et la gestion des absences au sein d'un établissement d'enseignement.</p><p>L'application repose sur une architecture MVC développée en PHP natif et propose trois rôles distincts : Administrateur, Enseignant et Étudiant. Chaque rôle dispose de fonctionnalités adaptées à ses besoins, permettant notamment la gestion des utilisateurs, le suivi des présences et la consultation des informations associées.</p><p>Le projet intègre un système de pointage automatique par reconnaissance faciale, basé sur DeepFace, en complément du marquage manuel des présences. Il comprend également des fonctionnalités d'export des données au format Excel et PDF, ainsi que l'envoi d'emails automatiques pour faciliter la communication et le suivi des absences.</p><p>Ce projet m'a permis de renforcer mes compétences en développement web, conception MVC, gestion des bases de données et intégration de solutions d'intelligence artificielle, notamment dans le domaine de la reconnaissance faciale.</p>",
+        "proj7.title": "Application de gestion de factures",
+        "proj7.desc": "<p>Projet de développement d'une application dédiée à la gestion et au suivi des factures, permettant de centraliser les informations financières et de faciliter le suivi des règlements.<br><br>L'application a été développée avec Flask selon une approche orientée objet et intègre un mécanisme de suivi automatique de l'état des factures en fonction du montant réglé. Cette fonctionnalité permet de déterminer automatiquement la situation de chaque facture et de faciliter le suivi des paiements. Le projet comprend également la génération de factures au format PDF ainsi que la production de rapports financiers.<br><br>Ce projet m'a permis de renforcer mes compétences en développement web avec Flask, programmation orientée objet, génération de documents, gestion financière et conteneurisation.</p>",
+        "proj7.modal.num": "PROJET 07",
+        "proj7.modal.title": "Application de gestion de factures",
+        "proj7.modal.body": "<p>Projet de développement d'une application dédiée à la gestion et au suivi des factures, permettant de centraliser les informations financières et de faciliter le suivi des règlements.</p><p>L'application a été développée avec Flask selon une approche orientée objet et intègre un mécanisme de suivi automatique de l'état des factures en fonction du montant réglé. Cette fonctionnalité permet de déterminer automatiquement la situation de chaque facture et de faciliter le suivi des paiements. Le projet comprend également la génération de factures au format PDF ainsi que la production de rapports financiers.</p><p>Ce projet m'a permis de renforcer mes compétences en développement web avec Flask, programmation orientée objet, génération de documents, gestion financière et conteneurisation.</p>",
+        "proj8.title": "Plateforme de réservation municipale",
+        "proj8.desc": "<p>Projet de développement d'une application de gestion des réservations pour une municipalité, visant à faciliter la gestion des demandes de réservation ainsi que leur suivi.<br><br>L'application repose sur un backend développé avec Spring Boot, permettant de gérer la logique métier et les différentes opérations liées aux réservations. Une interface destinée aux citoyens, développée avec HTML et Bootstrap, permet aux utilisateurs d'interagir avec la plateforme et d'effectuer leurs demandes de réservation.<br><br>Ce projet m'a permis de renforcer mes compétences en développement d'applications web, conception d'API et services backend avec Spring Boot, ainsi qu'en intégration d'interfaces web responsives.</p>",
+        "proj8.modal.num": "PROJET 08",
+        "proj8.modal.title": "Plateforme de réservation municipale",
+        "proj8.modal.body": "<p>Projet de développement d'une application de gestion des réservations pour une municipalité, visant à faciliter la gestion des demandes de réservation ainsi que leur suivi.</p><p>L'application repose sur un backend développé avec Spring Boot, permettant de gérer la logique métier et les différentes opérations liées aux réservations. Une interface destinée aux citoyens, développée avec HTML et Bootstrap, permet aux utilisateurs d'interagir avec la plateforme et d'effectuer leurs demandes de réservation.</p><p>Ce projet m'a permis de renforcer mes compétences en développement d'applications web, conception d'API et services backend avec Spring Boot, ainsi qu'en intégration d'interfaces web responsives.</p>",
+        "proj9.title": "Application mobile cosmétique",
+        "proj9.desc": "<p>Projet de développement d'une application mobile dédiée au domaine de la cosmétique, conçue pour proposer une expérience utilisateur simple et adaptée aux besoins d'un cas d'usage cosmétique.<br><br>L'application a été développée avec Flutter, permettant de concevoir une interface mobile multiplateforme et interactive. Elle intègre un système d'authentification des utilisateurs ainsi que le stockage et la gestion des données avec Firebase, assurant la communication entre l'application et les services backend.<br><br>Ce projet m'a permis de renforcer mes compétences en développement mobile multiplateforme, conception d'interfaces utilisateur et intégration de services cloud, notamment pour la gestion de l'authentification et des données.</p>",
+        "proj9.modal.num": "PROJET 09",
+        "proj9.modal.title": "Application mobile cosmétique",
+        "proj9.modal.body": "<p>Projet de développement d'une application mobile dédiée au domaine de la cosmétique, conçue pour proposer une expérience utilisateur simple et adaptée aux besoins d'un cas d'usage cosmétique.</p><p>L'application a été développée avec Flutter, permettant de concevoir une interface mobile multiplateforme et interactive. Elle intègre un système d'authentification des utilisateurs ainsi que le stockage et la gestion des données avec Firebase, assurant la communication entre l'application et les services backend.</p><p>Ce projet m'a permis de renforcer mes compétences en développement mobile multiplateforme, conception d'interfaces utilisateurs et intégration de services cloud, notamment pour la gestion de l'authentification et des données.</p>",
+        "skills.cat.bigdata": "Big Data & Streaming",
+        "skills.cat.mlops": "MLOps & Monitoring",
+        "skills.cat.languages": "Langages de programmation",
+        "skills.cat.frameworks": "Frameworks & bibliothèques",
+        "skills.cat.db": "Bases de données",
+        "skills.cat.tools": "Outils & environnements",
+        "motivation.assoc.title": "Vie associative",
+        "motivation.assoc.desc": "Membre du Microsoft Tech Club, FSEGS — participation à des initiatives autour des technologies intelligentes et du développement professionnel.",
+        "motivation.interests.title": "Centres d'intérêt",
+        "motivation.interests.desc": "Intelligence artificielle, transformation digitale, Industrie 4.0, Machine Learning, Deep Learning, Data Science."
+      },
+      en: {
+        "nav.about": "About",
+        "nav.education": "Education",
+        "nav.experience": "Experience",
+        "nav.projects": "Projects",
+        "nav.skills": "Skills",
+        "nav.contact": "Contact me",
+        "hero.tag": "Open to AI / Data internships",
+        "hero.title": 'Engineering student in <em>AI</em> & Data Engineering',
+        "hero.lede": "I design and develop solutions in data engineering and artificial intelligence, working on data pipeline design, machine learning, deep learning, and MLOps. I also build generative AI solutions, including RAG systems, intelligent chatbots, and AI agents. My approach is to turn data and models into concrete, reliable, and scalable solutions tailored to applications and users.",
+        "hero.btn.projects": "View my projects",
+        "hero.btn.contact": "Contact me",
+        "hero.btn.cvfr": "Resume (FR)",
+        "hero.btn.cven": "Resume (EN)",
+        "hero.card.title": "Key figures",
+        "hero.stat.internships": "Internships completed",
+        "hero.stat.projects": "Projects completed",
+        "hero.stat.languages": "Languages spoken",
+        "hero.stat.tech": "Technologies mastered",
+        "about.label": "Profile",
+        "about.title": "Engineering student specialized in Data Engineering and Artificial Intelligence",
+        "about.p1": "I am a 3rd-year engineering student in <strong>Data Engineering and Decision Systems</strong> at ENET'Com, Sfax. I hold a degree in Applied Computer Science to Management from FSEGS Sfax and a dual degree from the University of Le Mans, France.",
+        "about.p2": "My background lies at the intersection of <strong>Data Engineering, Data Science, MLOps, and full-stack development</strong>. I am particularly interested in data pipeline design, data processing and valorization, and building applications that make this data truly actionable.",
+        "about.p3": "What drives me is turning raw data into concrete, reliable solutions — combining engineering rigor, scientific curiosity, and a sense of the finished product.",
+        "about.fact.location": "Based in",
+        "about.fact.domain": "Field",
+        "about.fact.languages": "Languages",
+        "about.fact.availability": "Availability",
+        "about.fact.contact": "Contact",
+        "about.fact.location.value": "Sfax, Tunisia",
+        "about.fact.domain.value": "AI & Data Engineering",
+        "about.fact.languages.value": "Arabic · French · English",
+        "about.fact.availability.value": "Open to internships",
+        "education.label": "Education",
+        "education.title": "Academic background",
+        "education.subtitle": "A coherent path between software engineering, data, and data science.",
+        "experience.label": "Experience",
+        "experience.title": "Where I delivered, in teams and autonomously",
+        "projects.label": "Work",
+        "projects.title": "Nine projects, from model to interface",
+        "projects.subtitle": "A selection of academic and personal projects covering AI, data engineering, and full application development.",
+        "projects.hint": "Swipe to see the 9 projects",
+        "projects.details": "Project details",
+        "skills.label": "Technical skills",
+        "skills.title": "What I work with",
+        "skills.subtitle": "A complete technical stack, from storage to model deployment.",
+        "motivation.title": "What drives me",
+        "contact.label": "Contact",
+        "contact.title": "Let's talk data and AI",
+        "contact.subtitle": "Open to internships in AI, Data Engineering, or Data Science.",
+        "contact.email": "Send an email",
+        "contact.linkedin": "View my LinkedIn",
+        "footer": "© 2026 Nour Mhadhbi",
+        "edu1.date": "2024 — Present",
+        "edu1.title": "Engineering Degree — Data Engineering & Decision Systems (IDSD)",
+        "edu1.desc": "Specialized program in data engineering, machine learning algorithms, and decision support systems.",
+        "edu2.date": "2021 — 2024",
+        "edu2.title": "Bachelor's Degree in Applied Computer Science to Management",
+        "edu2.company": "FSEGS, Sfax · Dual degree, University of Le Mans, France",
+        "edu3.date": "2020 — 2021",
+        "edu3.title": "Baccalaureate, Experimental Sciences",
+        "exp1.date": "June 2026 · Sfax",
+        "exp1.title": "Intern — Retail Intelligence Platform",
+        "exp1.list": "<li>Developed a Retail Intelligence platform dedicated to processing and analyzing customer and transactional data.</li><li>Implemented Batch and Streaming pipelines with Apache Kafka and Apache Spark, including data processing and feature engineering for training classification, regression, and clustering models.</li><li>Automated and orchestrated workflows with n8n.</li><li>Built Grafana dashboards to track KPIs and integrated the visualizations into the platform's interface.</li><li>Implemented MLOps practices: model and data tracking/versioning with MLflow and DagsHub, exposure via a FastAPI API, and CI/CD workflow automation with GitHub Actions.</li><li>Developed a RAG/Chatbot solution for intelligent data exploration.</li>",
+        "exp2.date": "July 2025 · Sfax",
+        "exp2.title": "Summer Intern — DomiService Platform",
+        "exp2.list": "<li>Designed and developed a web platform connecting customers with home-service providers.</li><li>Modeled the database and built the API with Node.js / Express.js.</li><li>Developed the user interface with React.js.</li>",
+        "exp3.date": "June – Oct. 2024 · Sfax",
+        "exp3.title": "Full-Stack Web Developer",
+        "exp3.list": "<li>Maintained and evolved a production-tracking web platform.</li><li>Developed new features based on business needs.</li><li>Provided technical support and direct assistance to users.</li>",
+        "exp4.date": "Jan. – June 2024 · Sfax",
+        "exp4.title": "Final-Year Internship — CMMS Platform",
+        "exp4.list": "<li>Designed and developed a computerized maintenance management system (CMMS) web platform.</li>",
+        "proj1.title": "DocuMind — RAG Assistant",
+        "proj1.desc": "<p><strong>DocuMind</strong> is a conversational assistant based on RAG (Retrieval-Augmented Generation), allowing technical documentation to be queried in natural language and returning contextualized answers along with their sources.<br><br>The project covers the entire RAG pipeline: document ingestion and chunking, embedding generation, vector search with ChromaDB, and answer generation by an LLM. System quality is evaluated with RAGAS and experiments are tracked with MLflow.<br><br>The application is exposed via a FastAPI API, containerized with Docker, and integrated into a CI/CD workflow with GitHub Actions, with data versioning managed via DVC and DagsHub.</p>",
+        "proj1.modal.num": "PROJECT 01",
+        "proj1.modal.title": "DocuMind — Conversational RAG Assistant",
+        "proj1.modal.body": "<p><strong>DocuMind</strong> is a conversational assistant based on RAG (Retrieval-Augmented Generation), allowing technical documentation to be queried in natural language and returning contextualized answers along with their sources.</p><p>The project covers the entire RAG pipeline: document ingestion and chunking, embedding generation, vector search with ChromaDB, and answer generation by an LLM. System quality is evaluated with RAGAS and experiments are tracked with MLflow.</p><p>The application is exposed via a FastAPI API, containerized with Docker, and integrated into a CI/CD workflow with GitHub Actions, with data versioning managed via DVC and DagsHub.</p><p>Status: <span style='color: #d89b3d;'>In development</span></p>",
+        "proj2.title": "Retail Intelligence Platform",
+        "proj2.desc": "<p>A <strong>Retail Intelligence</strong> platform built during a summer internship at Anavid, dedicated to exploiting and analyzing customer and transactional data. The goal: turn raw data into actionable information for analysis and decision-making.<br><br>The project relies on Batch and Streaming pipelines with Apache Spark and Apache Kafka, including transformation and feature engineering to prepare data for classification, regression, and clustering models.<br><br>Grafana dashboards were built to track commercial KPIs, integrated via secure embedding. Workflow automation is handled by n8n.<br><br>A complete MLOps chain was put in place: data versioning and traceability with DagsHub, experiment tracking with MLflow, model exposure via FastAPI, and a CI/CD pipeline with GitHub Actions. Finally, a RAG/Chatbot solution enables conversational exploration of the data.</p>",
+        "proj2.modal.num": "PROJECT 02",
+        "proj2.modal.title": "Retail Intelligence Platform",
+        "proj2.modal.body": "<p>Project carried out during a summer internship, focused on building a Retail Intelligence platform for exploiting and analyzing customer and transactional data. The goal was to build a complete chain turning raw data into actionable information for analysis and decision-making.</p><p>Set up Batch and Streaming pipelines with Apache Spark and Kafka, including data transformation and feature engineering to prepare data for Machine Learning models (classification, regression, and clustering).</p><p>Built Grafana dashboards to track key commercial KPIs, then integrated them into the platform's interface via a secure embedding mechanism, centralizing access to indicators and analyses.</p><p>Workflow automation was implemented with n8n to orchestrate processing, trigger actions, and manage certain notifications.</p><p>An MLOps chain was put in place to track the model lifecycle, with data versioning and traceability via DagsHub, experiment and model tracking with MLflow, and model exposure via FastAPI. The entire development and deployment process was automated through a CI/CD pipeline with GitHub Actions, including running tests, quality checks, and building the artifacts needed for deployment.</p><p>Finally, a RAG/Chatbot solution was developed to enable conversational exploration of the data and results produced by the platform.</p><p>This experience let me put into practice skills in Data Engineering, Big Data, Machine Learning, MLOps, Data Visualization, and automation, while working on an architecture covering the entire chain, from data ingestion and processing to analysis, visualization, and model deployment.</p>",
+        "proj3.title": "Autism Detection with Graph Neural Networks",
+        "proj3.desc": "<p>Year-end project focused on detecting autism from neuroimaging data in the ABIDE I dataset (Autism Brain Imaging Data Exchange). The goal was to use Graph Neural Networks (GNN) to represent relationships between different brain regions and improve subject classification.</p><p>The project covered several stages, including data preprocessing, extraction of regions of interest (ROI), construction and normalization of brain connectivity graphs. We then applied the GAT-LI model (Graph Attention Network with Learnable Initialization) to learn the features and relationships present in the graphs.</p><p>Model performance was evaluated using several metrics, including accuracy, sensitivity, specificity, F1 score, and AUC, to assess its ability to distinguish subjects with and without autism.</p><p>This project let me deepen my knowledge of Deep Learning, Graph Neural Networks, and neuroimaging data processing, while gaining hands-on experience with PyTorch, Scikit-learn, and NumPy. Project carried out in collaboration with Abid Safa.</p>",
+        "proj3.modal.num": "PROJECT 03",
+        "proj3.modal.title": "Autism Detection with Graph Neural Networks",
+        "proj3.modal.body": "<p>Year-end project focused on detecting autism from neuroimaging data in the ABIDE I dataset (Autism Brain Imaging Data Exchange). The goal was to use Graph Neural Networks (GNN) to represent relationships between different brain regions and improve subject classification.</p><p>The project covered several stages, including data preprocessing, extraction of regions of interest (ROI), construction and normalization of brain connectivity graphs. We then applied the GAT-LI model (Graph Attention Network with Learnable Initialization) to learn the features and relationships present in the graphs.</p><p>Model performance was evaluated using several metrics, including accuracy, sensitivity, specificity, F1 score, and AUC, to assess its ability to distinguish subjects with and without autism.</p><p>This project let me deepen my knowledge of Deep Learning, Graph Neural Networks, and neuroimaging data processing, while gaining hands-on experience with PyTorch, Scikit-learn, and NumPy. Project carried out in collaboration with Abid Safa.</p>",
+        "proj4.title": "Shop Lifting — Anavid Smart Retail Platform",
+        "proj4.desc": "<p>Project developing a theft-detection solution for retail environments, integrated into the Anavid Smart Retail platform. The goal was to build an architecture to manage and forward alerts from video detection to a mobile application.</p><p>The project includes building token-authenticated REST APIs with Django REST Framework, to manage the data and alerts generated by the detection system. These endpoints are consumed by a mobile interface built with Ionic React, providing access to alerts and related information.</p><p>The architecture also integrates Redis for cache management and MySQL for data persistence. All components were containerized and deployed with Docker Compose, orchestrating the platform's various services.</p><p>This project let me strengthen my skills in REST API development, mobile development, database management, caching, and containerization, while working on a concrete application in the Smart Retail field.</p>",
+        "proj4.modal.num": "PROJECT 04",
+        "proj4.modal.title": "Shop Lifting — Anavid Smart Retail Platform",
+        "proj4.modal.body": "<p>Project developing a theft-detection solution for retail environments, integrated into the Anavid Smart Retail platform. The goal was to build an architecture to manage and forward alerts from video detection to a mobile application.</p><p>The project includes building token-authenticated REST APIs with Django REST Framework, to manage the data and alerts generated by the detection system. These endpoints are consumed by a mobile interface built with Ionic React, providing access to alerts and related information.</p><p>The architecture also integrates Redis for cache management and MySQL for data persistence. All components were containerized and deployed with Docker Compose, orchestrating the platform's various services.</p><p>This project let me strengthen my skills in REST API development, mobile development, database management, caching, and containerization, while working on a concrete application in the Smart Retail field.</p>",
+        "proj5.title": "Smart Task Manager",
+        "proj5.desc": "<p>Project developing a smart task management and tracking solution, designed to make it easier to distribute work across teams and improve project progress tracking.<br><br>The application offers smart task assignment based on several criteria, including skills, workload, and member availability. This approach allocates tasks according to available resources and project needs.<br><br>The project also includes an interactive Kanban-style timeline for visualizing tasks and their progress. The status of each task and the overall project progress are calculated automatically from the available data. An at-risk project detection mechanism also helps identify situations that need special attention.<br><br>This project let me develop my skills in project management, designing smart features, and building interactive applications, while working on tracking and decision-making automation.</p>",
+        "proj5.modal.num": "PROJECT 05",
+        "proj5.modal.title": "Smart Task Manager",
+        "proj5.modal.body": "<p>Project developing a smart task management and tracking solution, designed to make it easier to distribute work across teams and improve project progress tracking.</p><p>The application offers smart task assignment based on several criteria, including skills, workload, and member availability. This approach allocates tasks according to available resources and project needs.</p><p>The project also includes an interactive Kanban-style timeline for visualizing tasks and their progress. The status of each task and the overall project progress are calculated automatically from the available data. An at-risk project detection mechanism also helps identify situations that need special attention.</p><p>This project let me develop my skills in project management, designing smart features, and building interactive applications, while working on tracking and decision-making automation.</p>",
+        "proj6.title": "EduAdmin (OnLearn) — Attendance Management",
+        "proj6.desc": "<p>Project developing an academic attendance management application, designed to make it easier to track students and manage absences within an educational institution.<br><br>The application is built on an MVC architecture in native PHP and offers three distinct roles: Administrator, Teacher, and Student. Each role has features tailored to its needs, including user management, attendance tracking, and access to related information.<br><br>The project includes an automatic facial-recognition check-in system based on DeepFace, alongside manual attendance marking. It also includes data export to Excel and PDF, as well as automatic emails to facilitate communication and absence tracking.<br><br>This project let me strengthen my skills in web development, MVC design, database management, and integrating artificial intelligence solutions, particularly in facial recognition.</p>",
+        "proj6.modal.num": "PROJECT 06",
+        "proj6.modal.title": "EduAdmin (OnLearn) — Attendance Management",
+        "proj6.modal.body": "<p>Project developing an academic attendance management application, designed to make it easier to track students and manage absences within an educational institution.</p><p>The application is built on an MVC architecture in native PHP and offers three distinct roles: Administrator, Teacher, and Student. Each role has features tailored to its needs, including user management, attendance tracking, and access to related information.</p><p>The project includes an automatic facial-recognition check-in system based on DeepFace, alongside manual attendance marking. It also includes data export to Excel and PDF, as well as automatic emails to facilitate communication and absence tracking.</p><p>This project let me strengthen my skills in web development, MVC design, database management, and integrating artificial intelligence solutions, particularly in facial recognition.</p>",
+        "proj7.title": "Invoice Management Application",
+        "proj7.desc": "<p>Project developing an application dedicated to managing and tracking invoices, centralizing financial information and making payment tracking easier.<br><br>The application was built with Flask using an object-oriented approach and includes a mechanism that automatically tracks invoice status based on the amount paid. This feature automatically determines the status of each invoice and makes payment tracking easier. The project also includes PDF invoice generation and financial reporting.<br><br>This project let me strengthen my skills in web development with Flask, object-oriented programming, document generation, financial management, and containerization.</p>",
+        "proj7.modal.num": "PROJECT 07",
+        "proj7.modal.title": "Invoice Management Application",
+        "proj7.modal.body": "<p>Project developing an application dedicated to managing and tracking invoices, centralizing financial information and making payment tracking easier.</p><p>The application was built with Flask using an object-oriented approach and includes a mechanism that automatically tracks invoice status based on the amount paid. This feature automatically determines the status of each invoice and makes payment tracking easier. The project also includes PDF invoice generation and financial reporting.</p><p>This project let me strengthen my skills in web development with Flask, object-oriented programming, document generation, financial management, and containerization.</p>",
+        "proj8.title": "Municipal Reservation Platform",
+        "proj8.desc": "<p>Project developing a reservation management application for a municipality, aimed at making it easier to manage and track reservation requests.<br><br>The application is built on a backend developed with Spring Boot, handling the business logic and the various operations related to reservations. A citizen-facing interface, built with HTML and Bootstrap, lets users interact with the platform and submit their reservation requests.<br><br>This project let me strengthen my skills in web application development, API and backend service design with Spring Boot, and building responsive web interfaces.</p>",
+        "proj8.modal.num": "PROJECT 08",
+        "proj8.modal.title": "Municipal Reservation Platform",
+        "proj8.modal.body": "<p>Project developing a reservation management application for a municipality, aimed at making it easier to manage and track reservation requests.</p><p>The application is built on a backend developed with Spring Boot, handling the business logic and the various operations related to reservations. A citizen-facing interface, built with HTML and Bootstrap, lets users interact with the platform and submit their reservation requests.</p><p>This project let me strengthen my skills in web application development, API and backend service design with Spring Boot, and building responsive web interfaces.</p>",
+        "proj9.title": "Cosmetics Mobile Application",
+        "proj9.desc": "<p>Project developing a mobile application dedicated to the cosmetics field, designed to offer a simple user experience suited to a cosmetics use case.<br><br>The application was built with Flutter, enabling a cross-platform, interactive mobile interface. It includes a user authentication system as well as data storage and management with Firebase, handling communication between the application and backend services.<br><br>This project let me strengthen my skills in cross-platform mobile development, user interface design, and cloud service integration, particularly for authentication and data management.</p>",
+        "proj9.modal.num": "PROJECT 09",
+        "proj9.modal.title": "Cosmetics Mobile Application",
+        "proj9.modal.body": "<p>Project developing a mobile application dedicated to the cosmetics field, designed to offer a simple user experience suited to a cosmetics use case.</p><p>The application was built with Flutter, enabling a cross-platform, interactive mobile interface. It includes a user authentication system as well as data storage and management with Firebase, handling communication between the application and backend services.</p><p>This project let me strengthen my skills in cross-platform mobile development, user interface design, and cloud service integration, particularly for authentication and data management.</p>",
+        "skills.cat.bigdata": "Big Data & Streaming",
+        "skills.cat.mlops": "MLOps & Monitoring",
+        "skills.cat.languages": "Programming Languages",
+        "skills.cat.frameworks": "Frameworks & Libraries",
+        "skills.cat.db": "Databases",
+        "skills.cat.tools": "Tools & Environments",
+        "motivation.assoc.title": "Community Involvement",
+        "motivation.assoc.desc": "Member of the Microsoft Tech Club, FSEGS — participating in initiatives around smart technologies and professional development.",
+        "motivation.interests.title": "Interests",
+        "motivation.interests.desc": "Artificial intelligence, digital transformation, Industry 4.0, Machine Learning, Deep Learning, Data Science."
+      }
+    };
+
+    const LANG_KEY = 'preferred-lang';
+    let currentLang = localStorage.getItem(LANG_KEY) || 'fr';
+
+    function applyTranslations(lang) {
+      const dict = I18N[lang];
+      if (!dict) return;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) {
+          el.innerHTML = dict[key];
+        }
+      });
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-switch .lang-option').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+    }
+
+    function setLanguage(lang) {
+      if (lang !== 'fr' && lang !== 'en') lang = 'fr';
+      currentLang = lang;
+      localStorage.setItem(LANG_KEY, lang);
+      applyTranslations(lang);
+    }
+
+    // ============================================================
+    // ==== INITIALISATION ====
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // --- Traduction ---
+      applyTranslations(currentLang);
+      const langSwitch = document.getElementById('langSwitch');
+      if (langSwitch) {
+        langSwitch.querySelectorAll('.lang-option').forEach(btn => {
+          btn.addEventListener('click', () => {
+            setLanguage(btn.getAttribute('data-lang'));
+          });
+        });
+      }
+
+      // --- Ouverture modal ---
+      document.querySelectorAll('[data-open-modal]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const modalId = btn.getAttribute('data-open-modal');
+          const modal = document.getElementById(modalId);
+          if (!modal) return;
+          modal.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      // --- Fermeture modal ---
+      document.querySelectorAll('.project-modal').forEach(modal => {
+        const closeBtn = modal.querySelector('.modal-close');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+          });
+        }
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+          }
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          document.querySelectorAll('.project-modal.open').forEach(m => {
+            m.classList.remove('open');
+          });
+          document.body.style.overflow = '';
+        }
+      });
+
+      // --- Barre de progression ---
+      const progressBar = document.getElementById('progressBar');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = progress + '%';
+      }, { passive: true });
+
+      // --- Navbar scroll ---
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 40);
+      }, { passive: true });
+
+      // --- Menu burger ---
+      const burger = document.getElementById('burger');
+      const navLinks = document.getElementById('navLinks');
+      burger.addEventListener('click', () => {
+        burger.classList.toggle('active');
+        navLinks.classList.toggle('open');
+      });
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          burger.classList.remove('active');
+          navLinks.classList.remove('open');
+        });
+      });
+
+      // --- Curseur lumineux ---
+      const cursorGlow = document.getElementById('cursorGlow');
+      if (cursorGlow && window.matchMedia('(hover: hover)').matches) {
+        let mouseX = 0, mouseY = 0, glowX = 0, glowY = 0;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        (function animateGlow() {
+          glowX += (mouseX - glowX) * 0.12;
+          glowY += (mouseY - glowY) * 0.12;
+          cursorGlow.style.left = glowX + 'px';
+          cursorGlow.style.top = glowY + 'px';
+          requestAnimationFrame(animateGlow);
+        })();
+      }
+
+      // --- Révélation au scroll ---
+      const revealElements = document.querySelectorAll('.reveal');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+      revealElements.forEach(el => revealObserver.observe(el));
+
+      // --- Parallaxe hero ---
+      const heroCard = document.querySelector('.hero-card');
+      if (heroCard && window.matchMedia('(hover: hover)').matches) {
+        document.addEventListener('mousemove', (e) => {
+          const x = (e.clientX / window.innerWidth - 0.5) * 12;
+          const y = (e.clientY / window.innerHeight - 0.5) * 12;
+          heroCard.style.transform = `translate(${x}px, ${y}px) rotate(${x * 0.1}deg)`;
+        });
+      }
+
+      // --- Compteur animé ---
+      const statNums = document.querySelectorAll('.stat-num');
+      const statObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const text = el.textContent;
+            const match = text.match(/^(\d+)/);
+            if (match) {
+              const target = parseInt(match[1]);
+              const suffix = text.replace(/^\d+/, '');
+              let current = 0;
+              const duration = 1200;
+              const stepTime = 16;
+              const steps = duration / stepTime;
+              const increment = target / steps;
+              const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) { current = target; clearInterval(timer); }
+                el.textContent = Math.floor(current) + suffix;
+              }, stepTime);
+            }
+            statObserver.unobserve(el);
+          }
+        });
+      }, { threshold: 0.6 });
+      statNums.forEach(el => statObserver.observe(el));
+
+      // --- Smooth scroll ---
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          const target = document.querySelector(targetId);
+          if (target) {
+            e.preventDefault();
+            const offset = 70;
+            const top = target.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+        });
+      });
+    });
+  </script>
+
+  <!-- ==================== MODALS PROJETS ==================== -->
+
+  <!-- MODAL PROJET 01 : DOCUMIND -->
+  <div class="project-modal" id="proj-1" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M6 3h9l4 4v14H6z" />
+            <path d="M15 3v5h5" />
+            <path d="M9 12h6" />
+            <path d="M9 15h6" />
+            <path d="M9 18h4" />
+            <circle cx="17" cy="16" r="2.5" />
+            <path d="M19 18l2 2" />
+          </svg>
+        </div>
+        <div class="modal-title-wrap">
+          <span class="modal-num" data-i18n="proj1.modal.num">PROJET 01</span>
+          <h3 class="modal-title" data-i18n="proj1.modal.title">DocuMind — Assistant conversationnel RAG</h3>
+        </div>
+      </div>
+      <div class="modal-body" data-i18n="proj1.modal.body">
+        <p>
+          <strong>DocuMind</strong> est un assistant conversationnel basé sur le
+          RAG (Retrieval-Augmented Generation), permettant
+          d’interroger des documentations techniques en langage naturel et
+          d’obtenir des réponses contextualisées accompagnées de leurs sources.
+        </p>
+        <p>
+          Le projet couvre l’ensemble du pipeline RAG :
+          ingestion et découpage des documents, génération d’embeddings,
+          recherche vectorielle avec ChromaDB et génération des réponses par un
+          LLM. La qualité du système est évaluée avec
+          RAGAS et les expérimentations sont suivies avec
+          MLflow.
+        </p>
+        <p>
+          L’application est exposée via une API FastAPI,
+          conteneurisée avec Docker et intégrée à un workflow
+          CI/CD avec GitHub Actions, avec gestion du
+          versionnement des données via DVC et DagsHub.
+        </p>
+        <p>
+          Statut :
+          <span style="color: #d89b3d;">En cours de développement</span>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-stack">
+          <span>Python</span>
+          <span>RAG</span>
+          <span>LLMs</span>
+          <span>Sentence-Transformers</span>
+          <span>ChromaDB</span>
+          <span>FastAPI</span>
+          <span>Docker</span>
+          <span>RAGAS</span>
+          <span>MLflow</span>
+          <span>DVC</span>
+          <span>DagsHub</span>
+          <span>GitHub Actions</span>
+        </div>
+        <div class="modal-links">
+          <a class="modal-github" href="https://github.com/NourMhadhbi/Documind.git" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+            Voir sur GitHub
+          </a>
+          <a class="modal-github" href="https://dagshub.com/mhadhbinouur/documind.git" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="6" cy="6" r="2.2" />
+              <circle cx="6" cy="18" r="2.2" />
+              <circle cx="18" cy="12" r="2.2" />
+              <path d="M8 6.8L15.9 11" />
+              <path d="M8 17.2L15.9 13" />
+              <path d="M6 8.2v7.6" />
+            </svg>
+            Voir sur DagsHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROJET 02 : RETAIL INTELLIGENCE PLATFORM -->
+  <div class="project-modal" id="proj-9" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 3h2l2 12h11l2-8H6" />
+            <circle cx="9" cy="19" r="1.6" />
+            <circle cx="17" cy="19" r="1.6" />
+            <path d="M9 8v6M13 8v6M17 8v6" />
+          </svg>
+        </div>
+        <div class="modal-title-wrap">
+          <span class="modal-num" data-i18n="proj2.modal.num">PROJET 02</span>
+          <h3 class="modal-title" data-i18n="proj2.modal.title">Retail Intelligence Platform</h3>
+        </div>
+      </div>
+      <div class="modal-body" data-i18n="proj2.modal.body">
+        <p>
+          Projet réalisé dans le cadre d’un stage d’été, consacré
+          au développement d’une plateforme de Retail Intelligence
+          pour l’exploitation et l’analyse des données clients et transactionnelles.
+          L’objectif était de construire une chaîne complète permettant de transformer
+          les données brutes en informations exploitables pour l’analyse et la prise
+          de décision.
+        </p>
+        <p>
+          Mise en place de pipelines Batch et Streaming avec Apache Spark
+          et Kafka, incluant la transformation des données et le
+          feature engineering pour préparer les données destinées
+          aux modèles de Machine Learning (classification, régression et
+          clustering).
+        </p>
+        <p>
+          Des dashboards Grafana ont été développés pour le suivi
+          des principaux KPI commerciaux, puis intégrés à
+          l’interface de la plateforme via un mécanisme d’embedding
+          sécurisé, permettant de centraliser l’accès aux indicateurs et
+          aux analyses.
+        </p>
+        <p>
+          L’automatisation des workflows a été réalisée avec
+          n8n pour orchestrer les traitements, déclencher des
+          actions et gérer certaines notifications.
+        </p>
+        <p>
+          Une chaîne MLOps a été mise en place pour assurer le suivi
+          du cycle de vie des modèles, avec le versionnement et la
+          traçabilité des données via DagsHub, le suivi des
+          expérimentations et des modèles avec MLflow, ainsi que
+          l’exposition des modèles via FastAPI. L’ensemble du
+          processus de développement et de déploiement a été automatisé à travers un
+          pipeline CI/CD avec GitHub Actions, incluant l’exécution
+          des tests, les contrôles de qualité et la construction des artefacts
+          nécessaires au déploiement.
+        </p>
+        <p>
+          Enfin, une solution RAG/Chatbot a été développée pour
+          permettre une exploitation conversationnelle des données et des résultats
+          produits par la plateforme.
+        </p>
+        <p>
+          Cette expérience m’a permis de mettre en pratique des compétences en
+          Data Engineering, Big Data, Machine Learning, MLOps, Data
+          Visualization et automatisation, tout en travaillant sur une
+          architecture couvrant l’ensemble de la chaîne, de l’ingestion et du
+          traitement des données jusqu’à leur analyse, leur visualisation et
+          l’exploitation des modèles.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-stack">
+          <span>Python</span>
+          <span>Apache Spark</span>
+          <span>Apache Kafka</span>
+          <span>PostgreSQL</span>
+          <span>Scikit-learn</span>
+          <span>Grafana</span>
+          <span>n8n</span>
+          <span>MLflow</span>
+          <span>DagsHub</span>
+          <span>FastAPI</span>
+          <span>GitHub Actions</span>
+          <span>Ionic</span>
+          <span>React</span>
+        </div>
+        <div class="modal-links">
+          <a class="modal-github" href="https://github.com/ZeinebGhrab/HM-Retail-Intelligence-platform.git"
+            target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+            Voir sur GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROJET 03 : DÉTECTION AUTISME GNN -->
+  <div class="project-modal" id="proj-2" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M12 2a4 4 0 0 0-4 4v1a4 4 0 0 0-4 4v1a4 4 0 0 0 2 3.46V17a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4v-1.54A4 4 0 0 0 20 12v-1a4 4 0 0 0-4-4V6a4 4 0 0 0-4-4z" />
+            <path d="M12 8v8M9 10h6M9 14h6" />
+          </svg>
+        </div>
+        <div class="modal-title-wrap">
+          <span class="modal-num" data-i18n="proj3.modal.num">PROJET 03</span>
+          <h3 class="modal-title" data-i18n="proj3.modal.title">Détection de l'autisme avec des Graph Neural Networks
+          </h3>
+        </div>
+      </div>
+      <div class="modal-body" data-i18n="proj3.modal.body">
+        <p>Projet de fin d'année consacré à la détection de l'autisme à partir de données de neuro-imagerie de la base
+          ABIDE I (Autism Brain Imaging Data Exchange). L'objectif était d'exploiter les Graph Neural Networks (GNN)
+          pour représenter les relations entre les différentes régions du cerveau et améliorer la classification des
+          sujets.</p>
+        <p>Le projet a porté sur plusieurs étapes, notamment le prétraitement des données, l'extraction des régions
+          d'intérêt (ROI), la construction des graphes de connectivité cérébrale et leur normalisation. Nous avons
+          ensuite appliqué le modèle GAT-LI (Graph Attention Network with Learnable Initialization) afin d'apprendre les
+          caractéristiques et les relations présentes dans les graphes.</p>
+        <p>Les performances du modèle ont été évaluées à travers plusieurs métriques, notamment l'accuracy, la
+          sensibilité, la spécificité, le score F1 et l'AUC, afin d'analyser sa capacité à distinguer les sujets avec et
+          sans autisme.</p>
+        <p>Ce projet m'a permis d'approfondir mes connaissances en Deep Learning, Graph Neural Networks et traitement de
+          données de neuro-imagerie, tout en développant une expérience pratique avec PyTorch, Scikit-learn et NumPy.
+          Projet réalisé en collaboration avec Abid Safa.</p>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-stack"><span>Python</span><span>PyTorch</span><span>Graph Neural
+            Networks</span><span>Scikit-learn</span><span>NumPy</span></div>
+        <a class="modal-github" href="https://github.com/NourMhadhbi/Neuroscan-asd.git" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+          </svg>
+          Voir sur GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROJET 04 : SHOP LIFTING -->
+  <div class="project-modal" id="proj-3" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg></button>
+      <div class="modal-header">
+        <div class="modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3h18v4H3zM3 10h18v11H3z" />
+            <path d="M8 10v11M16 10v11" />
+            <circle cx="12" cy="6" r="1" />
+          </svg></div>
+        <div class="modal-title-wrap"><span class="modal-num" data-i18n="proj4.modal.num">PROJET 04</span>
+          <h3 class="modal-title" data-i18n="proj4.modal.title">Shop Lifting — Anavid Smart Retail Platform</h3>
+        </div>
+      </div>
+      <div class="modal-body" data-i18n="proj4.modal.body">
+        <p>Projet de développement d'une solution de détection de vol en environnement retail, intégrée à la plateforme
+          Anavid Smart Retail. L'objectif était de mettre en place une architecture permettant de gérer et de
+          transmettre les alertes issues de la détection vidéo vers une application mobile.</p>
+        <p>Le projet comprend le développement d'API REST authentifiées par token avec Django REST Framework, permettant
+          de gérer les données et les alertes générées par le système de détection. Ces endpoints sont consommés par une
+          interface mobile développée avec Ionic React, offrant un accès aux alertes et aux informations associées.</p>
+        <p>L'architecture intègre également Redis pour la gestion du cache et MySQL pour la persistance des données.
+          L'ensemble des composants a été conteneurisé et déployé avec Docker Compose, permettant d'orchestrer les
+          différents services de la plateforme.</p>
+        <p>Ce projet m'a permis de renforcer mes compétences en développement d'API REST, développement mobile, gestion
+          des bases de données, mise en cache et conteneurisation, tout en travaillant sur une application concrète dans
+          le domaine du Smart Retail.</p>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-stack"><span>Python</span><span>Django REST Framework</span><span>Redis</span><span>Ionic
+            React</span><span>MySQL</span><span>Docker Compose</span></div>
+        <a class="modal-github" href="https://github.com/nour-mhadhbi/anavid-shop-lifting" target="_blank"
+          rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+          </svg>Voir sur GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROJET 05 : GESTIONNAIRE TÂCHES -->
+  <div class="project-modal" id="proj-4" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg></button>
+      <div class="modal-header">
+        <div class="modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="17" rx="2" />
+            <path d="M3 9h18M8 2v4M16 2v4" />
+            <path d="M8 14l2 2 4-4" />
+          </svg></div>
+        <div class="modal-title-wrap"><span class="modal-num" data-i18n="proj5.modal.num">PROJET 05</span>
+          <h3 class="modal-title" data-i18n="proj5.modal.title">Gestionnaire de tâches intelligent</h3>
+        </div>
+      </div>
+      <div class="modal-body" data-i18n="proj5.modal.body">
+        <p>Projet de développement d'une solution de gestion et de suivi intelligent des tâches, conçue pour faciliter
+          la répartition du travail au sein des équipes et améliorer le suivi de l'avancement des projets.</p>
+        <p>L'application propose une affectation intelligente des tâches en prenant en compte plusieurs critères,
+          notamment les compétences, la charge de travail et la disponibilité des membres. Cette approche permet
+          d'attribuer les tâches en fonction des ressources disponibles et des besoins du projet.</p>
+        <p>Le projet intègre également une timeline interactive de type Kanban, permettant de visualiser les tâches et
+          leur progression. L'état de chaque tâche ainsi que l'avancement global des projets sont calculés
+          automatiquement à partir des données disponibles. Un mécanisme de détection des projets à risque permet par
+          ailleurs d'identifier les situations nécessitant une attention particulière.</p>
+        <p>Ce projet m'a permis de développer mes compétences en gestion de projet, conception de fonctionnalités
+          intelligentes et développement d'applications interactives, tout en travaillant sur l'automatisation du suivi
+          et de la prise de décision.</p>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-stack"><span>Spring Boot</span><span>Spring Data
+            JPA</span><span>MySQL</span><span>Thymeleaf</span><span>Bootstrap</span></div>
+        <a class="modal-github" href="https://github.com/nour-mhadhbi/smart-task-manager" target="_blank"
+          rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+          </svg>Voir sur GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROJET 06 : EDUADMIN -->
+  <div class="project-modal" id="proj-5" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg></button>
+      <div class="modal-header">
+        <div class="modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10L12 5 2 10l10 5 10-5z" />
+            <path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5" />
+          </svg></div>
+        <div class="modal-title-wrap"><span class="modal-num" data-i18n="proj6.modal.num">PROJET 06</span>
+          <h3 class="modal-title" data-i18n="proj6.modal.title">EduAdmin (OnLearn) — Gestion des présences</h3>
+        </div>
+      </div>
+      <div class="modal-body" data-i18n="proj6.modal.body">
+        <p>Projet de développement d'une application de gestion des présences académiques, conçue pour faciliter le
+          suivi des étudiants et la gestion des absences au sein d'un établissement d'enseignement.</p>
+        <p>L'application repose sur une architecture MVC développée en PHP natif et propose trois rôles distincts :
+          Administrateur, Enseignant et Étudiant. Chaque rôle dispose de fonctionnalités adaptées à ses besoins,
+          permettant notamment la gestion des utilisateurs, le suivi des présences et la consultation des informations
+          associées.</p>
+        <p>Le projet intègre un système de pointage automatique par reconnaissance faciale, basé sur DeepFace, en
+          complément du marquage manuel des présences. Il comprend également des fonctionnalités d'export des données au
+          format Excel et PDF, ainsi que l'envoi d'emails automatiques pour faciliter la communication et le suivi des
+          absences.</p>
+        <p>Ce projet m'a permis de renforcer mes compétences en développement web, conception MVC, gestion des bases de
+          données et intégration de solutions d'intelligence artificielle, notamment dans le domaine de la
+          reconnaissance faciale.</p>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-stack"><span>PHP natif</span><span>MySQL / PDO</span><span>Python ·
+            DeepFace</span><span>PHPMailer</span><span>Dompdf</span></div>
+        <a class="modal-github" href="https://github.com/NourMhadhbi/EduAdmin.git" target="_blank" rel="noopener"><svg
+            viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+          </svg>Voir sur GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROJET 07 : GESTION FACTURES -->
+  <div class="project-modal" id="proj-6" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg></button>
+      <div class="modal-header">
+        <div class="modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <path d="M14 2v6h6" />
+            <path d="M9 13h6M9 17h6M9 9h2" />
+          </svg></div>
+        <div class="modal-title-wrap"><span class="modal-num" data-i18n="proj7.modal.num">PROJET 07</span>
+          <h3 class="modal-title" data-i18n="proj7.modal.title">Application de gestion de factures</h3>
+        </div>
+      </div>
+      <div class="modal-body" data-i18n="proj7.modal.body">
+        <p>Projet de développement d'une application dédiée à la gestion et au suivi des factures, permettant de
+          centraliser les informations financières et de faciliter le suivi des règlements.</p>
+        <p>L'application a été développée avec Flask selon une approche orientée objet et intègre un mécanisme de suivi
+          automatique de l'état des factures en fonction du montant réglé. Cette fonctionnalité permet de déterminer
+          automatiquement la situation de chaque facture et de faciliter le suivi des paiements. Le projet comprend
+          également la génération de factures au format PDF ainsi que la production de rapports financiers.</p>
+        <p>Ce projet m'a permis de renforcer mes compétences en développement web avec Flask, programmation orientée
+          objet, génération de documents, gestion financière et conteneurisation.</p>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-stack">
+          <span>Python</span><span>Flask</span><span>MySQL</span><span>FPDF</span><span>Docker</span>
+        </div>
+        <a class="modal-github" href="https://github.com/nour-mhadhbi/invoice-manager-flask" target="_blank"
+          rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+          </svg>Voir sur GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROJET 08 : RÉSERVATION MUNICIPALE -->
+  <div class="project-modal" id="proj-7" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg></button>
+      <div class="modal-header">
+        <div class="modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M5 21V7l7-4 7 4v14" />
+            <path d="M9 21v-6h6v6M9 10h.01M15 10h.01M9 14h.01M15 14h.01" />
+          </svg></div>
+        <div class="modal-title-wrap"><span class="modal-num" data-i18n="proj8.modal.num">PROJET 08</span>
+          <h3 class="modal-title" data-i18n="proj8.modal.title">Plateforme de réservation municipale</h3>
+        </div>
+      </div>
+      <div class="modal-body" data-i18n="proj8.modal.body">
+        <p>Projet de développement d'une application de gestion des réservations pour une municipalité, visant à
+          faciliter la gestion des demandes de réservation ainsi que leur suivi.</p>
+        <p>L'application repose sur un backend développé avec Spring Boot, permettant de gérer la logique métier et les
+          différentes opérations liées aux réservations. Une interface destinée aux citoyens, développée avec HTML et
+          Bootstrap, permet aux utilisateurs d'interagir avec la plateforme et d'effectuer leurs demandes de
+          réservation.</p>
+        <p>Ce projet m'a permis de renforcer mes compétences en développement d'applications web, conception d'API et
+          services backend avec Spring Boot, ainsi qu'en intégration d'interfaces web responsives.</p>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-stack"><span>Spring Boot</span><span>Bootstrap</span><span>HTML</span></div>
+        <a class="modal-github" href="https://github.com/nour-mhadhbi/municipal-reservation" target="_blank"
+          rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+          </svg>Voir sur GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROJET 09 : APPLICATION MOBILE COSMÉTIQUE -->
+  <div class="project-modal" id="proj-8" role="dialog" aria-modal="true">
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg></button>
+      <div class="modal-header">
+        <div class="modal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="2" width="12" height="20" rx="3" />
+            <path d="M11 18h2" />
+            <path d="M12 6v6M9 9h6" />
+          </svg></div>
+        <div class="modal-title-wrap"><span class="modal-num" data-i18n="proj9.modal.num">PROJET 09</span>
+          <h3 class="modal-title" data-i18n="proj9.modal.title">Application mobile cosmétique</h3>
+        </div>
+      </div>
+      <div class="modal-body" data-i18n="proj9.modal.body">
+        <p>Projet de développement d'une application mobile dédiée au domaine de la cosmétique, conçue pour proposer une
+          expérience utilisateur simple et adaptée aux besoins d'un cas d'usage cosmétique.</p>
+        <p>L'application a été développée avec Flutter, permettant de concevoir une interface mobile multiplateforme et
+          interactive. Elle intègre un système d'authentification des utilisateurs ainsi que le stockage et la gestion
+          des données avec Firebase, assurant la communication entre l'application et les services backend.</p>
+        <p>Ce projet m'a permis de renforcer mes compétences en développement mobile multiplateforme, conception
+          d'interfaces utilisateurs et intégration de services cloud, notamment pour la gestion de l'authentification et
+          des données.</p>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-stack"><span>Flutter</span><span>Dart</span><span>Firebase</span></div>
+        <a class="modal-github" href="https://github.com/nour-mhadhbi/cosmetics-mobile-app" target="_blank"
+          rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+          </svg>Voir sur GitHub</a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
