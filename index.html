@@ -685,7 +685,7 @@
     /* ============ À PROPOS ============ */
     .about-grid {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 340px 1fr;
       gap: 44px;
       align-items: start;
     }
@@ -697,6 +697,7 @@
       box-shadow: var(--shadow-md);
       border: 1px solid var(--line);
       position: relative;
+      margin-top: 30px;
     }
 
     .about-photo-card::before {
@@ -858,6 +859,58 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+    }
+
+    /* .timeline-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      font-size: .82rem;
+      font-weight: 500;
+      transition: all .3s var(--ease);
+    }
+*/
+
+
+    .timeline-link {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-color: var(--accent-soft);
+      transition: color .3s var(--ease), text-decoration-color .3s var(--ease);
+    }
+
+    .timeline-link:hover {
+      color: var(--accent-deep);
+      text-decoration-color: var(--accent-deep);
+    }
+
+    .timeline-link svg {
+      width: 16px;
+      height: 16px;
+      transition: transform .3s var(--ease);
+    }
+
+    .timeline-link:hover {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -8px rgba(36, 22, 33, .35);
+    }
+
+    .timeline-link:hover svg {
+      transform: rotate(-8deg) scale(1.08);
     }
 
     /* ============ SKILLS / PROJETS ============ */
@@ -1825,7 +1878,7 @@
           <span class="dot"></span>
           <span data-i18n="hero.tag">Ouverte aux stages IA / Data</span>
         </span>
-        <h1 data-i18n="hero.title">Étudiante ingénieure en Data Engineering &amp; <em>IA</em>  </h1>
+        <h1 data-i18n="hero.title">Étudiante ingénieure en <em>IA</em> &amp; Data Engineering</h1>
         <p class="hero-lede" data-i18n="hero.lede">
           Je conçois et développe des solutions en ingénierie des données et en intelligence artificielle, en
           intervenant sur la conception de pipelines de données, le machine learning, le deep learning et le MLOps. Je
@@ -1918,19 +1971,20 @@
           <img src="nour-mhadhbi-pro.jpg" alt="Nour Mhadhbi" onerror="this.style.display='none'">
         </div>
         <div class="about-text reveal reveal-delay-1">
-          <p data-i18n="about.p1">Je suis étudiante en 3ᵉ année du cycle ingénieur en <strong>Ingénierie des Données et
-              Systèmes
-              Décisionnels</strong> à l'ENET'Com, Sfax. Diplômée en Informatique Appliquée à la Gestion de la FSEGS
-            de Sfax, je suis également titulaire d'un double diplôme de l'Université du Mans, en France.</p>
-          <p data-i18n="about.p2">Mon parcours se situe à l'intersection de la <strong>Data Engineering, de la Data
-              Science, du MLOps
-              et du développement full-stack</strong>. Je m'intéresse particulièrement à la conception de pipelines
-            de données, au traitement et à la valorisation de la donnée, ainsi qu'au développement des applications
-            qui rendent ces données réellement exploitables.</p>
+          <p data-i18n="about.p1">Je suis étudiante en 3ᵉ année du cycle ingénieur en Ingénierie des Données et Systèmes
+            Décisionnels (IDSD) à l’ENET’Com Sfax. Diplômée
+            en Informatique Appliquée à la Gestion de la FSEGS Sfax, avec un double diplôme de l’Université du Mans
+            (France).</p>
+          <p data-i18n="about.p2">Mon expertise technique s’articule autour du traitement distribué à grande échelle
+            avec Apache Spark, du streaming de données en temps réel avec Apache Kafka et de la conception d’entrepôts
+            de données (Data Warehousing). Je m’intéresse également au développement de solutions d’Intelligence
+            Artificielle, à travers la conception et le déploiement de modèles de Machine Learning et de Deep Learning,
+            la mise en place de pipelines MLOps robustes, ainsi que le développement d’assistants intelligents basés sur
+            des architectures RAG (Retrieval-Augmented Generation).</p>
           <p data-i18n="about.p3">Ce qui me motive, c'est de transformer des données brutes en solutions concrètes et
-            fiables — en
-            combinant rigueur d'ingénierie, curiosité scientifique et sens du produit fini.</p>
-
+            fiables — en combinant rigueur d'ingénierie, curiosité scientifique et sens du produit.</p>
+          <p data-i18n="about.p4">Actuellement à la recherche d’un stage de fin d’études (PFE), je souhaite mettre en
+            pratique mon expertise et contribuer à des projets Data & IA innovants et à forte valeur ajoutée.</p>
           <div class="fact-card">
             <div class="fact-row"><span class="fact-label" data-i18n="about.fact.location">Basée à</span><span
                 class="fact-value" data-i18n="about.fact.location.value">Sfax, Tunisie</span>
@@ -2080,6 +2134,13 @@
               class="skill-tag">JavaScript</span>
             <span class="skill-tag">CSS</span><span class="skill-tag">Ajax</span><span class="skill-tag">jQuery</span>
           </div>
+          <a class="timeline-link" href="https://github.com/NourMhadhbi/ProjetGMAO.git" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.6-4.04-1.6-.55-1.4-1.34-1.77-1.34-1.77-1.1-.75.08-.73.08-.73 1.21.08 1.85 1.24 1.85 1.24 1.08 1.85 2.83 1.32 3.52 1.01.11-.78.42-1.32.76-1.62-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.23 0 4.63-2.8 5.65-5.47 5.95.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+            </svg>
+            <span data-i18n="exp.viewgithub">Voir sur GitHub</span>
+          </a>
         </div>
       </div>
     </div>
@@ -2653,7 +2714,7 @@
     <div class="contact-inner reveal">
       <span class="section-label" data-i18n="contact.label">Contact</span>
       <h2 data-i18n="contact.title">Parlons données et IA</h2>
-      <p data-i18n="contact.subtitle">Ouverte aux stages en Data Engineering, IA, ou Data Science.</p>
+      <p data-i18n="contact.subtitle">Ouverte aux stages en IA, Data Engineering ou Data Science.</p>
       <div class="contact-actions">
         <a href="mailto:mhadhbinouur@gmail.com" class="btn btn-primary">
           <span data-i18n="contact.email">Envoyer un email</span>
@@ -2714,7 +2775,7 @@
         "nav.skills": "Compétences",
         "nav.contact": "Me contacter",
         "hero.tag": "Ouverte aux stages IA / Data",
-        "hero.title": 'Étudiante ingénieure en Data Engineering & <em>IA</em> ',
+        "hero.title": 'Étudiante ingénieure en <em>IA</em> & Data Engineering',
         "hero.lede": "Je conçois et développe des solutions en ingénierie des données et en intelligence artificielle, en intervenant sur la conception de pipelines de données, le machine learning, le deep learning et le MLOps. Je développe également des solutions d'IA générative, notamment des systèmes RAG, des chatbots intelligents et des agents IA. Mon approche consiste à transformer les données et les modèles en solutions concrètes, fiables et évolutives, adaptées aux besoins des applications et des utilisateurs.",
         "hero.btn.projects": "Voir mes projets",
         "hero.btn.contact": "Me contacter",
@@ -2725,11 +2786,13 @@
         "hero.stat.projects": "Projets réalisés",
         "hero.stat.languages": "Langues parlées",
         "hero.stat.tech": "Technologies maîtrisées",
+
         "about.label": "Profil",
         "about.title": "Étudiante Ingénieure spécialisée en Data Engineering et Intelligence Artificielle",
-        "about.p1": "Je suis étudiante en 3ᵉ année du cycle ingénieur en <strong>Ingénierie des Données et Systèmes Décisionnels</strong> à l'ENET'Com, Sfax. Diplômée en Informatique Appliquée à la Gestion de la FSEGS de Sfax, je suis également titulaire d'un double diplôme de l'Université du Mans, en France.",
-        "about.p2": "Mon parcours se situe à l'intersection de la <strong>Data Engineering, de la Data Science, du MLOps et du développement full-stack</strong>. Je m'intéresse particulièrement à la conception de pipelines de données, au traitement et à la valorisation de la donnée, ainsi qu'au développement des applications qui rendent ces données réellement exploitables.",
-        "about.p3": "Ce qui me motive, c'est de transformer des données brutes en solutions concrètes et fiables — en combinant rigueur d'ingénierie, curiosité scientifique et sens du produit fini.",
+        "about.p1": "Je suis étudiante en 3ᵉ année du cycle ingénieur en Ingénierie des Données et Systèmes Décisionnels (IDSD) à l’ENET’Com Sfax. Diplômée en Informatique Appliquée à la Gestion de la FSEGS Sfax, avec un double diplôme de l’Université du Mans (France).",
+        "about.p2": "Mon expertise technique s’articule autour du traitement distribué à grande échelle avec Apache Spark, du streaming de données en temps réel avec Apache Kafka et de la conception d’entrepôts de données (Data Warehousing). Je m’intéresse également au développement de solutions d’Intelligence Artificielle, à travers la conception et le déploiement de modèles de Machine Learning et de Deep Learning, la mise en place de pipelines MLOps robustes, ainsi que le développement d’assistants intelligents basés sur des architectures RAG (Retrieval-Augmented Generation).",
+        "about.p3": "Ce qui me motive, c'est de transformer des données brutes en solutions concrètes et fiables — en combinant rigueur d'ingénierie, curiosité scientifique et sens du produit.",
+        "about.p4": "Actuellement à la recherche d’un stage de fin d’études (PFE), je souhaite mettre en pratique mon expertise et contribuer à des projets Data & IA innovants et à forte valeur ajoutée.",
         "about.fact.location": "Basée à",
         "about.fact.domain": "Domaine",
         "about.fact.languages": "Langues",
@@ -2755,7 +2818,7 @@
         "motivation.title": "Ce qui me motive",
         "contact.label": "Contact",
         "contact.title": "Parlons données et IA",
-        "contact.subtitle": "Ouverte aux stages en Data Engineering, IA ou Data Science.",
+        "contact.subtitle": "Ouverte aux stages en IA, Data Engineering ou Data Science.",
         "contact.email": "Envoyer un email",
         "contact.linkedin": "Voir mon LinkedIn",
         "footer": "© 2026 Nour Mhadhbi",
@@ -2767,6 +2830,7 @@
         "edu2.company": "FSEGS, Sfax · Double diplôme, Université du Mans, France",
         "edu3.date": "2020 — 2021",
         "edu3.title": "Baccalauréat, Sciences Expérimentales",
+        "exp.viewgithub": "Voir sur GitHub",
         "exp1.date": "Juin 2026 · Sfax",
         "exp1.title": "Stagiaire — Retail Intelligence Platform",
         "exp1.list": "<li>Développement d'une plateforme de Retail Intelligence dédiée au traitement et à l'analyse des données clients et transactionnelles</li><li>Mise en œuvre de pipelines Batch et Streaming avec Apache Kafka et Apache Spark, intégrant le traitement et le feature engineering des données pour l'entraînement de modèles de classification, régression et clustering.</li><li>Automatisation et orchestration des workflows avec n8n.</li><li>Développement de dashboards Grafana pour le suivi des KPIs et intégration des visualisations à l'interface de la plateforme.</li><li>Mise en œuvre de pratiques MLOps : suivi et versionnement des modèles et des données avec MLflow et DagsHub, exposition via API FastAPI, et automatisation des workflows CI/CD avec GitHub Actions.</li><li>Développement d'une solution RAG/Chatbot pour l'exploitation intelligente des données.</li>",
@@ -2843,7 +2907,7 @@
         "nav.skills": "Skills",
         "nav.contact": "Contact me",
         "hero.tag": "Open to AI / Data internships",
-        "hero.title": 'Engineering student in Data Engineering & <em>AI</em> ',
+        "hero.title": 'Engineering student in <em>AI</em> & Data Engineering',
         "hero.lede": "I design and develop solutions in data engineering and artificial intelligence, working on data pipeline design, machine learning, deep learning, and MLOps. I also build generative AI solutions, including RAG systems, intelligent chatbots, and AI agents. My approach is to turn data and models into concrete, reliable, and scalable solutions tailored to applications and users.",
         "hero.btn.projects": "View my projects",
         "hero.btn.contact": "Contact me",
@@ -2856,16 +2920,17 @@
         "hero.stat.tech": "Technologies mastered",
         "about.label": "Profile",
         "about.title": "Engineering student specialized in Data Engineering and Artificial Intelligence",
-        "about.p1": "I am a 3rd-year engineering student in <strong>Data Engineering and Decision Systems</strong> at ENET'Com, Sfax. I hold a degree in Applied Computer Science to Management from FSEGS Sfax and a dual degree from the University of Le Mans, France.",
-        "about.p2": "My background lies at the intersection of <strong>Data Engineering, Data Science, MLOps, and full-stack development</strong>. I am particularly interested in data pipeline design, data processing and valorization, and building applications that make this data truly actionable.",
-        "about.p3": "What drives me is turning raw data into concrete, reliable solutions — combining engineering rigor, scientific curiosity, and a sense of the finished product.",
+        "about.p1": "I am a 3rd-year engineering student in Data Engineering and Decision Support Systems (IDSD) at ENET’Com Sfax. I hold a degree in Applied Computer Science for Management from FSEG Sfax, with a double degree from Le Mans University (France).",
+        "about.p2": "My technical expertise centers on large-scale distributed processing with Apache Spark, real-time data streaming with Apache Kafka, and Data Warehousing design. I am also deeply interested in developing Artificial Intelligence solutions—ranging from designing and deploying Machine Learning and Deep Learning models to setting up robust MLOps pipelines and building intelligent assistants powered by RAG (Retrieval-Augmented Generation) architectures.",
+        "about.p3": "What drives me is turning raw data into concrete, reliable solutions by combining engineering rigor, scientific curiosity, and product sense.",
+        "about.p4": "Currently seeking a graduation internship, I am eager to apply my skills and contribute to innovative, high-impact Data & AI projects.",
         "about.fact.location": "Based in",
         "about.fact.domain": "Field",
         "about.fact.languages": "Languages",
         "about.fact.availability": "Availability",
         "about.fact.contact": "Contact",
         "about.fact.location.value": "Sfax, Tunisia",
-        "about.fact.domain.value": "Data Engineering & AI  ",
+        "about.fact.domain.value": "AI & Data Engineering",
         "about.fact.languages.value": "Arabic · French · English",
         "about.fact.availability.value": "Open to internships",
         "education.label": "Education",
@@ -2875,7 +2940,7 @@
         "experience.title": "Where I delivered, in teams and autonomously",
         "projects.label": "Work",
         "projects.title": "Nine projects, from model to interface",
-        "projects.subtitle": "A selection of academic and personal projects covering data engineering, AI and full application development.",
+        "projects.subtitle": "A selection of academic and personal projects covering AI, data engineering, and full application development.",
         "projects.hint": "Swipe to see the 9 projects",
         "projects.details": "Project details",
         "skills.label": "Technical skills",
@@ -2884,7 +2949,7 @@
         "motivation.title": "What drives me",
         "contact.label": "Contact",
         "contact.title": "Let's talk data and AI",
-        "contact.subtitle": "Open to internships in Data Engineering, AI or Data Science.",
+        "contact.subtitle": "Open to internships in AI, Data Engineering, or Data Science.",
         "contact.email": "Send an email",
         "contact.linkedin": "View my LinkedIn",
         "footer": "© 2026 Nour Mhadhbi",
@@ -2896,6 +2961,7 @@
         "edu2.company": "FSEGS, Sfax · Dual degree, University of Le Mans, France",
         "edu3.date": "2020 — 2021",
         "edu3.title": "Baccalaureate, Experimental Sciences",
+        "exp.viewgithub": "View on GitHub",
         "exp1.date": "June 2026 · Sfax",
         "exp1.title": "Intern — Retail Intelligence Platform",
         "exp1.list": "<li>Developed a Retail Intelligence platform dedicated to processing and analyzing customer and transactional data.</li><li>Implemented Batch and Streaming pipelines with Apache Kafka and Apache Spark, including data processing and feature engineering for training classification, regression, and clustering models.</li><li>Automated and orchestrated workflows with n8n.</li><li>Built Grafana dashboards to track KPIs and integrated the visualizations into the platform's interface.</li><li>Implemented MLOps practices: model and data tracking/versioning with MLflow and DagsHub, exposure via a FastAPI API, and CI/CD workflow automation with GitHub Actions.</li><li>Developed a RAG/Chatbot solution for intelligent data exploration.</li>",
